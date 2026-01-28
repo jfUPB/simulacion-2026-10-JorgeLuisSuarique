@@ -352,7 +352,7 @@ Este código es un simulador y visualizador interactivo de la Distribución Norm
 ## Actividad 5
 ### Explicacion
 Elegí esta implementación híbrida del Vuelo de Lévy porque captura la esencia de la solución al problema del sobremuestreo que describiste —combinar muchos pasos pequeños de búsqueda local (con distribución gaussiana para un movimiento orgánico) con saltos grandes ocasionales (con una distribución power-law aproximada para simular la rareza de los desplazamientos largos)—, ofreciendo así una metáfora visual potente y eficiente de optimización de la exploración, donde la estructura emergente de racimos conectados por trazos largos no solo es matemáticamente interesante, sino también narrativa y estéticamente rica, demostrando en la práctica el poder de mezclar distribuciones de azar con intención creativa.
-```
+``` js
 // Caminante con Vuelo de Lévy Mejorado
 // Combina pasos pequeños frecuentes con saltos grandes ocasionales
 // para optimizar la búsqueda en el espacio
@@ -617,6 +617,11 @@ function star(x, y, radius1, radius2, npoints) {
 ![https://editor.p5js.org/JorgeLuisSuarique/sketches/VDtG84O2u]
 ![Grabación 2026-01-27 142247](https://github.com/user-attachments/assets/1c98fe58-fcb0-45f3-8764-e28ea3b881fa)
 
+## Actividad 6.
+
+## Actividad 7.
+
+
 ## Bitácora de proceso de aprendizaje
 
 
@@ -625,5 +630,6 @@ function star(x, y, radius1, radius2, npoints) {
 
 
 ## Bitácora de reflexión
+
 
 

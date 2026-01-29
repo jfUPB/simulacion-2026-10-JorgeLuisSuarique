@@ -618,9 +618,466 @@ function star(x, y, radius1, radius2, npoints) {
 ![Grabación 2026-01-27 142247](https://github.com/user-attachments/assets/1c98fe58-fcb0-45f3-8764-e28ea3b881fa)
 
 ## Actividad 6.
+El resultado esperado de esta visualización era demostrar de manera interactiva y contundente la diferencia esencial entre el Ruido Perlin y la aleatoriedad pura: observar claramente cómo el Perlin genera una curva suave, coherente y orgánica (como una montaña o una ola) donde cada valor fluye naturalmente desde el anterior, creando un patrón con "memoria", mientras que el azar uniforme produce una línea quebrada, caótica e impredecible donde cada salto es un evento aislado y abrupto; esta comparación directa, junto con una aplicación práctica que muestra cómo el Perlin puede generar terrenos naturales, permite comprender que su valor no está en ser "más o menos aleatorio", sino en ofrecer un azar estructurado y con continuidad que es la base para simular la complejidad y fluidez del mundo natural en el arte generativo.
+``` js
+// VISUALIZACIÓN INTERACTIVA: PERLIN NOISE vs RANDOM NOISE
+// Muestra la diferencia esencial entre azar orgánico y caos puro
+
+let historicoPerlin = [];
+let historicoRandom = [];
+let tiempo = 0;
+let velocidad = 0.02;
+let modo = 'comparacion'; // 'comparacion' o 'terreno'
+
+function setup() {
+  createCanvas(1000, 600);
+  
+  // Inicializar historiales
+  for (let i = 0; i < 200; i++) {
+    historicoPerlin.push(0);
+    historicoRandom.push(0);
+  }
+  
+  background(10, 15, 25);
+  textFont('Courier New');
+}
+
+function draw() {
+  if (modo === 'comparacion') {
+    dibujarComparacion();
+  } else {
+    dibujarTerreno();
+  }
+  
+  dibujarInterfaz();
+}
+
+function dibujarComparacion() {
+  // Fondo oscuro
+  background(10, 15, 25);
+  
+  // Título
+  fill(240, 245, 255);
+  textSize(20);
+  textAlign(CENTER);
+  text('🎯 COMPARACIÓN: PERLIN NOISE vs RANDOM NOISE', width/2, 30);
+  
+  // Actualizar tiempo
+  tiempo += velocidad;
+  
+  // === LADO IZQUIERDO: PERLIN NOISE ===
+  push();
+  translate(50, 100);
+  
+  // Encabezado
+  fill(100, 200, 255);
+  textSize(16);
+  textAlign(LEFT);
+  text('PERLIN NOISE (Orgánico)', 0, -30);
+  
+  // Generar nuevo valor Perlin
+  let nuevoPerlin = noise(tiempo); // Valor entre 0 y 1
+  
+  // Actualizar histórico
+  historicoPerlin.shift();
+  historicoPerlin.push(nuevoPerlin);
+  
+  // Dibujar cuadrícula
+  stroke(40, 60, 80, 100);
+  strokeWeight(1);
+  for (let x = 0; x <= 400; x += 50) {
+    line(x, 0, x, 200);
+  }
+  for (let y = 0; y <= 200; y += 25) {
+    line(0, y, 400, y);
+  }
+  
+  // Ejes
+  stroke(80, 120, 180);
+  strokeWeight(2);
+  line(0, 100, 400, 100); // Línea central
+  line(0, 0, 0, 200); // Eje Y
+  
+  // Dibujar curva Perlin
+  noFill();
+  stroke(80, 180, 255, 220);
+  strokeWeight(3);
+  beginShape();
+  for (let i = 0; i < historicoPerlin.length; i++) {
+    let x = map(i, 0, historicoPerlin.length - 1, 0, 400);
+    let y = map(historicoPerlin[i], 0, 1, 200, 0);
+    vertex(x, y);
+  }
+  endShape();
+  
+  // Punto actual
+  fill(80, 180, 255);
+  noStroke();
+  let ultimoX = 400;
+  let ultimoY = map(historicoPerlin[historicoPerlin.length-1], 0, 1, 200, 0);
+  ellipse(ultimoX, ultimoY, 10, 10);
+  
+  // Valor numérico
+  textSize(12);
+  fill(150, 220, 255);
+  text(`Valor actual: ${nuevoPerlin.toFixed(3)}`, 300, 220);
+  text(`Tiempo: ${tiempo.toFixed(2)}`, 300, 240);
+  
+  pop();
+  
+  // === LADO DERECHO: RANDOM NOISE ===
+  push();
+  translate(550, 100);
+  
+  // Encabezado
+  fill(255, 150, 100);
+  textSize(16);
+  textAlign(LEFT);
+  text('RANDOM NOISE (Caótico)', 0, -30);
+  
+  // Generar nuevo valor Random
+  let nuevoRandom = random(1); // Valor entre 0 y 1
+  
+  // Actualizar histórico
+  historicoRandom.shift();
+  historicoRandom.push(nuevoRandom);
+  
+  // Dibujar cuadrícula
+  stroke(80, 60, 40, 100);
+  strokeWeight(1);
+  for (let x = 0; x <= 400; x += 50) {
+    line(x, 0, x, 200);
+  }
+  for (let y = 0; y <= 200; y += 25) {
+    line(0, y, 400, y);
+  }
+  
+  // Ejes
+  stroke(180, 120, 80);
+  strokeWeight(2);
+  line(0, 100, 400, 100);
+  line(0, 0, 0, 200);
+  
+  // Dibujar línea Random
+  noFill();
+  stroke(255, 150, 100, 220);
+  strokeWeight(3);
+  beginShape();
+  for (let i = 0; i < historicoRandom.length; i++) {
+    let x = map(i, 0, historicoRandom.length - 1, 0, 400);
+    let y = map(historicoRandom[i], 0, 1, 200, 0);
+    vertex(x, y);
+  }
+  endShape();
+  
+  // Punto actual
+  fill(255, 150, 100);
+  noStroke();
+  let ultimoXR = 400;
+  let ultimoYR = map(historicoRandom[historicoRandom.length-1], 0, 1, 200, 0);
+  ellipse(ultimoXR, ultimoYR, 10, 10);
+  
+  // Valor numérico
+  textSize(12);
+  fill(255, 200, 150);
+  text(`Valor actual: ${nuevoRandom.toFixed(3)}`, 300, 220);
+  text(`Sin correlación temporal`, 300, 240);
+  
+  pop();
+  
+  // === EXPLICACIÓN CENTRAL ===
+  fill(200, 230, 255, 220);
+  textSize(14);
+  textAlign(CENTER);
+  
+  let explicacionY = 400;
+  text('🔑 DIFERENCIA FUNDAMENTAL:', width/2, explicacionY);
+  textSize(12);
+  text('Perlin Noise: Cada valor está CORRELACIONADO con los anteriores', width/2, explicacionY + 25);
+  text('Random Noise: Cada valor es INDEPENDIENTE (sin memoria)', width/2, explicacionY + 45);
+  
+  // Analogía
+  fill(150, 255, 150);
+  text('ANALOGÍA:', width/2, explicacionY + 75);
+  text('Perlin = Paseo por la montaña (cambios suaves)', width/2, explicacionY + 95);
+  text('Random = Teletransportación aleatoria (saltos bruscos)', width/2, explicacionY + 115);
+}
+
+function dibujarTerreno() {
+  // Visualización alternativa: terreno generado con Perlin
+  background(10, 15, 25);
+  
+  // Título
+  fill(240, 245, 255);
+  textSize(20);
+  textAlign(CENTER);
+  text('🏔️ TERENO GENERADO CON PERLIN NOISE', width/2, 30);
+  
+  tiempo += velocidad * 0.5;
+  
+  // Generar terreno
+  noStroke();
+  for (let x = 0; x < width; x += 2) {
+    // Usar Perlin para altura
+    let noiseVal = noise(x * 0.01, tiempo);
+    let altura = map(noiseVal, 0, 1, 100, height - 100);
+    
+    // Color según altura
+    let verdes = map(altura, 100, height - 100, 100, 50);
+    let alturaNorm = map(altura, 100, height - 100, 0, 1);
+    
+    fill(50, verdes, 30);
+    rect(x, altura, 2, height - altura);
+    
+    // Nieve en cimas
+    if (alturaNorm < 0.3) {
+      fill(200, 230, 255, 150);
+      rect(x, altura - 5, 2, 5);
+    }
+  }
+  
+  // Explicación
+  fill(200, 230, 255);
+  textSize(14);
+  text('Perlin crea transiciones suaves → Terreno natural', width/2, height - 40);
+  text('Random crearía picos abruptos → Terreno artificial', width/2, height - 20);
+}
+
+function dibujarInterfaz() {
+  // Controles
+  fill(180, 200, 255, 200);
+  noStroke();
+  rect(20, height - 80, 200, 60, 10);
+  
+  fill(10, 15, 25);
+  textSize(12);
+  textAlign(LEFT);
+  text('🎮 CONTROLES:', 35, height - 65);
+  text('ESPACIO: Cambiar vista', 35, height - 50);
+  text('↑↓: Velocidad (ahora: ' + velocidad.toFixed(2) + ')', 35, height - 35);
+  
+  // Indicador de modo
+  fill(modo === 'comparacion' ? [100, 200, 255, 200] : [150, 255, 150, 200]);
+  textAlign(RIGHT);
+  textSize(14);
+  text(modo === 'comparacion' ? '📈 MODO COMPARACIÓN' : '🏔️ MODO TERRENO', width - 30, height - 30);
+}
+
+function keyPressed() {
+  if (key === ' ') {
+    modo = modo === 'comparacion' ? 'terreno' : 'comparacion';
+  }
+  
+  if (keyCode === UP_ARROW) {
+    velocidad = min(0.1, velocidad + 0.005);
+  }
+  
+  if (keyCode === DOWN_ARROW) {
+    velocidad = max(0.001, velocidad - 0.005);
+  }
+}
+```
+![https://editor.p5js.org/JorgeLuisSuarique/sketches/-Ncm5xj6w]
+<img width="900" height="734" alt="image" src="https://github.com/user-attachments/assets/6705f87f-3938-4f54-8d20-b911b566507e" />
+
 
 ## Actividad 7.
+Una obra generativa es una creación artística en la que el artista no diseña directamente el resultado final, sino que establece un sistema de reglas, procesos y parámetros a menudo mediante código algorítmico—que, al ejecutarse, produce de forma autónoma y potencialmente infinita la obra en sí. Su esencia radica en la delegación de la agencia creativa: el artista actúa como arquitecto de posibilidades, definiendo el espacio en el que operarán elementos como la aleatoriedad, el ruido procedural o la interacción en tiempo real. El resultado es una pieza viva, única en cada ejecución y en constante evolución, que explora la belleza del orden emergente, la complejidad a partir de simplicidad y el diálogo entre la intención humana y la lógica autónoma del sistema.
+``` js
+// OBRA SIMPLE: TRES CONCEPTOS, UNA VISIÓN CLARA
+let particulas = [];
+let gaussCentroX, gaussCentroY, gaussRadio;
+let perlinTiempo = 0;
+let perlinValor = 0;
 
+function setup() {
+  createCanvas(800, 600);
+  
+  // Inicializar centro gaussiano
+  gaussCentroX = width / 2;
+  gaussCentroY = height / 2;
+  gaussRadio = 100;
+  
+  // Crear partículas simples
+  for (let i = 0; i < 40; i++) {
+    particulas.push(new Particula());
+  }
+  
+  background(20);
+}
+
+function draw() {
+  // CONCEPTO 1: PERLIN como estado emocional (FONDO)
+  perlinTiempo += 0.01;
+  perlinValor = noise(perlinTiempo); // Valor entre 0 y 1
+  
+  // Fondo cambia con Perlin
+  let fondoH = map(perlinValor, 0, 1, 200, 280); // Azul a púrpura
+  background(fondoH, 30, 50, 20);
+  
+  // Título que cambia con Perlin
+  fill(255);
+  textSize(16);
+  textAlign(CENTER);
+  text(`ESTADO PERLIN: ${perlinValor.toFixed(2)}`, width/2, 30);
+  
+  // CONCEPTO 2: GAUSSIANA como tu influencia (INTERACCIÓN)
+  actualizarGaussiana();
+  dibujarGaussiana();
+  
+  // CONCEPTO 3: LÉVY como partículas vivas (ACCIÓN)
+  actualizarParticulas();
+  dibujarParticulas();
+  
+  // Leyenda minimalista
+  dibujarLeyenda();
+}
+
+function actualizarGaussiana() {
+  // El centro sigue al mouse suavemente
+  gaussCentroX = lerp(gaussCentroX, mouseX, 0.1);
+  gaussCentroY = lerp(gaussCentroY, mouseY, 0.1);
+  
+  // El radio cambia con Perlin
+  gaussRadio = 80 + perlinValor * 40;
+}
+
+function dibujarGaussiana() {
+  // Zona de influencia gaussiana
+  noFill();
+  stroke(255, 200, 100, 150);
+  strokeWeight(2);
+  ellipse(gaussCentroX, gaussCentroY, gaussRadio * 2, gaussRadio * 2);
+  
+  // Centro
+  fill(255, 200, 100, 200);
+  noStroke();
+  ellipse(gaussCentroX, gaussCentroY, 10, 10);
+}
+
+function actualizarParticulas() {
+  for (let p of particulas) {
+    // ¿Está dentro de la zona gaussiana?
+    let distancia = dist(p.x, p.y, gaussCentroX, gaussCentroY);
+    let enZonaGauss = distancia < gaussRadio;
+    
+    // PERLIN afecta la probabilidad general de saltos
+    let probBase = map(perlinValor, 0, 1, 0.02, 0.1);
+    
+    // GAUSSIANA modifica la probabilidad localmente
+    if (enZonaGauss) {
+      // Dentro de la zona: más probabilidad de saltos largos
+      p.probSalto = probBase * 3;
+    } else {
+      // Fuera: comportamiento normal
+      p.probSalto = probBase;
+    }
+    
+    p.actualizar();
+  }
+}
+
+function dibujarParticulas() {
+  for (let p of particulas) {
+    p.dibujar();
+  }
+}
+
+function dibujarLeyenda() {
+  fill(255, 230);
+  textSize(12);
+  textAlign(LEFT);
+  text('🌀 PERLIN: Estado emocional (fondo)', 20, height - 60);
+  text('🎯 GAUSSIANA: Tu influencia (círculo)', 20, height - 40);
+  text('🦅 LÉVY: Vida que explora (líneas)', 20, height - 20);
+}
+
+// ============ CLASE PARTICULA SIMPLE ============
+class Particula {
+  constructor() {
+    this.x = random(width);
+    this.y = random(height);
+    this.historial = [];
+    this.maxHistorial = 5;
+    this.color = color(random(150, 255), random(150, 255), 255, 200);
+  }
+  
+  actualizar() {
+    // Guardar posición anterior
+    this.historial.push({x: this.x, y: this.y});
+    if (this.historial.length > this.maxHistorial) {
+      this.historial.shift();
+    }
+    
+    // DECISIÓN LÉVY: ¿Salto largo o paso corto?
+    if (random() < this.probSalto) {
+      this.saltoLevy();
+    } else {
+      this.pasoNormal();
+    }
+    
+    // Mantener en pantalla
+    this.x = (this.x + width) % width;
+    this.y = (this.y + height) % height;
+  }
+  
+  saltoLevy() {
+    // SALTO LARGO (distribución power-law)
+    let angulo = random(TWO_PI);
+    let largo = pow(random(0.01, 0.99), 1/2.0) * 100; // Power-law
+    
+    this.x += cos(angulo) * largo;
+    this.y += sin(angulo) * largo;
+  }
+  
+  pasoNormal() {
+    // PASO CORTO (distribución normal)
+    let angulo = random(TWO_PI);
+    let corto = random(1, 3); // Simple, no Gaussian para simplicidad
+    
+    this.x += cos(angulo) * corto;
+    this.y += sin(angulo) * corto;
+  }
+  
+  dibujar() {
+    // Dibujar historial
+    if (this.historial.length > 1) {
+      for (let i = 0; i < this.historial.length - 1; i++) {
+        let p1 = this.historial[i];
+        let p2 = this.historial[i + 1];
+        
+        // Líneas más opacas si son recientes
+        let alpha = map(i, 0, this.historial.length, 50, 200);
+        stroke(red(this.color), green(this.color), blue(this.color), alpha);
+        strokeWeight(1);
+        line(p1.x, p1.y, p2.x, p2.y);
+      }
+    }
+    
+    // Dibujar partícula actual
+    noStroke();
+    fill(this.color);
+    ellipse(this.x, this.y, 4, 4);
+  }
+}
+
+function mousePressed() {
+  // Interacción simple: click crea nueva partícula
+  let p = new Particula();
+  p.x = mouseX;
+  p.y = mouseY;
+  particulas.push(p);
+  
+  // Limitar número máximo
+  if (particulas.length > 60) {
+    particulas.shift();
+  }
+}
+```
+![https://editor.p5js.org/JorgeLuisSuarique/sketches/6KHU30kl2]
+<img width="894" height="740" alt="image" src="https://github.com/user-attachments/assets/b8a757c8-4bcc-4542-a1d7-a9eaf1968f26" />
+
+## Actividad 8
 
 ## Bitácora de proceso de aprendizaje
 
@@ -630,6 +1087,7 @@ function star(x, y, radius1, radius2, npoints) {
 
 
 ## Bitácora de reflexión
+
 
 
 

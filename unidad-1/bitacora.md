@@ -1,4 +1,5 @@
 # Unidad 1
+## Bitácora de proceso de aprendizaje
 
 ## Actividad 1.
 ### Frase.
@@ -881,8 +882,18 @@ function keyPressed() {
 <img width="900" height="734" alt="image" src="https://github.com/user-attachments/assets/6705f87f-3938-4f54-8d20-b911b566507e" />
 
 
+
+
+
+
+
+
+## Bitácora de aplicación 
 ## Actividad 7.
-Una obra generativa es una creación artística en la que el artista no diseña directamente el resultado final, sino que establece un sistema de reglas, procesos y parámetros a menudo mediante código algorítmico—que, al ejecutarse, produce de forma autónoma y potencialmente infinita la obra en sí. Su esencia radica en la delegación de la agencia creativa: el artista actúa como arquitecto de posibilidades, definiendo el espacio en el que operarán elementos como la aleatoriedad, el ruido procedural o la interacción en tiempo real. El resultado es una pieza viva, única en cada ejecución y en constante evolución, que explora la belleza del orden emergente, la complejidad a partir de simplicidad y el diálogo entre la intención humana y la lógica autónoma del sistema.
+Una obra generativa es una creación artística en la que el artista no diseña directamente el resultado final, sino que establece un sistema de reglas, procesos y parámetros a menudo mediante código algorítmico que, al ejecutarse, produce de forma autónoma y potencialmente infinita la obra en sí. Su esencia radica en la delegación de la agencia creativa: el artista actúa como arquitecto de posibilidades, definiendo el espacio en el que operarán elementos como la aleatoriedad, el ruido procedural o la interacción en tiempo real. El resultado es una pieza viva, única en cada ejecución y en constante evolución, que explora la belleza del orden emergente, la complejidad a partir de simplicidad y el diálogo entre la intención humana y la lógica autónoma del sistema.
+
+El código actual implementa tres conceptos de forma aislada: un campo gaussiano estático, partículas con vuelo de Lévy guiadas por ruido de Perlin individual, y un sistema de alerta que activa huida coordinada con clics. Sin embargo, no constituye una obra generativa coherente porque los conceptos no interactúan creativamente, la interacción se reduce a un único gesto (clic = huida) sin consecuencias acumulativas, y el sistema no genera comportamientos emergentes ni evoluciona, limitándose a una demostración técnica donde el usuario no puede esculpir, construir o transformar significativamente el sistema en tiempo real.
+
 ``` js
 // OBRA SIMPLE: TRES CONCEPTOS, UNA VISIÓN CLARA
 let particulas = [];
@@ -1077,17 +1088,16 @@ function mousePressed() {
 ![https://editor.p5js.org/JorgeLuisSuarique/sketches/6KHU30kl2]
 <img width="894" height="740" alt="image" src="https://github.com/user-attachments/assets/b8a757c8-4bcc-4542-a1d7-a9eaf1968f26" />
 
-## Actividad 8
-
-## Bitácora de proceso de aprendizaje
-
-
-## Bitácora de aplicación 
-
-
-
 ## Bitácora de reflexión
+**1)**
+La diferencia fundamental es que random() genera caos puro e independiente, donde cada valor es un evento aislado sin relación con los anteriores (como lanzar dados repetidamente), ideal para sorpresa total y eventos discretos; mientras que noise() produce aleatoriedad orgánica con memoria, creando un campo continuo donde valores cercanos son similares y las transiciones son suaves (como el curso de un río), perfecto para simular naturaleza, movimientos fluidos y variaciones espaciales coherentes. Usarías random() para barajar cartas o inicializar posiciones aleatorias, y noise() para generar terrenos montañosos o el movimiento natural de un enjambre.
+**2)**
+Visualmente, una caminata aleatoria con distribución uniforme produce un patrón de exploración caótica y dispersa, con trazos angulares que se extienden en todas direcciones por igual, creando una textura de líneas quebradas que llena el espacio de manera homogénea pero sin estructura clara. En cambio, una con distribución normal (gaussiana) genera un movimiento orgánico y concentrado, donde la mayoría de los pasos son pequeños y similares, ocasionalmente interrumpidos por desplazamientos más largos pero raros, resultando en trazos más suaves, curvilíneos y con una tendencia a formar racimos o núcleos de actividad densa, imitando el comportamiento errante natural de insectos o partículas en un fluido.
+**3)**
+En el arte generativo, la aleatoriedad actúa como motor creativo y colaborador autónomo, cumpliendo al menos dos funciones esenciales: primero, funciona como generador de unicidad y sorpresa, asegurando que cada ejecución del sistema produzca resultados únicos e impredecibles, lo que transforma al artista de ejecutor absoluto en un diseñador de sistemas que establece reglas pero delega la materialización final al azar controlado; y segundo, sirve como simulador de procesos naturales y orgánicos, permitiendo imitar la complejidad y variación de fenómenos como el crecimiento de plantas, el fluir del agua o la formación de nubes a través de distribuciones no uniformes (como el ruido de Perlin o la distribución gaussiana), inyectando a la obra una sensación de vida y autenticidad que el determinismo puro no podría alcanzar.
+**4)**
+En mi obra final, el concepto de Vuelo de Lévy fue la elección central y adecuada porque buscaba crear la ilusión de un enjambre inteligente con propósito, no solo partículas errantes. Mientras que una caminata aleatoria uniforme habría producido un movimiento caótico y sin rumbo como mosquitos en pánico, el patrón powerlaw del Lévy, con sus numerosos pasos pequeños interrumpidos por saltos largos ocasionales, simuló de manera eficiente una búsqueda estratégica de recursos. Esto generó una narrativa visual emergente donde las partículas parecían explorar meticulosamente zonas locales antes de lanzarse audazmente a nuevos territorios, creando una danza entre concentración y expansión que evocaba directamente el comportamiento de aves o insectos en la naturaleza, cumpliendo así mi objetivo de combinar algoritmia con una sensación de vida e intencionalidad orgánica.
+**5)**
+En el contexto de la simulación, un paseo o caminata aleatoria (random walk) es un modelo matemático que describe una trayectoria formada por una serie de pasos sucesivos, donde cada paso se determina al azar a partir de una distribución de probabilidad. Es la abstracción fundamental para simular procesos de exploración, difusión o búsqueda en espacios digitales, desde el movimiento de una partícula en un fluido hasta la fluctuación de precios en el mercado. La esencia del paseo aleatorio es su falta de memoria: la dirección de cada paso es independiente de los anteriores, haciendo de la trayectoria resultante un registro puro de azar secuencial.
 
-
-
-
+La característica particular que define una caminata de Lévy o "Lévy flight es su distribución de los tamaños de paso según una ley de potencia (power-law), donde muchos pasos son muy cortos y unos pocos son extremadamente largos. A diferencia de una caminata aleatoria común donde los pasos tienen un tamaño típico (como en la distribución normal), en el Lévy flight la probabilidad de dar un paso de longitud *L* decae como *L^(−μ)* (con 1 < μ < 3), lo que significa que no existe una escala de longitud característica: los saltos largos, aunque raros, son posibles y cruciales. Este patrón multiescala y fractal optimiza la cobertura del espacio al equilibrar la búsqueda local intensiva (pasos cortos) con la exploración global audaz (saltos largos), imitando la estrategia de búsqueda de alimentos de animales como albatros, abejas y primates, y generando visualmente trayectorias con racimos de actividad densa conectados por líneas de huida largas y dramáticas.

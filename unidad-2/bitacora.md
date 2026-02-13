@@ -385,4 +385,96 @@ https://editor.p5js.org/JorgeLuisSuarique/sketches/lOw71JjbT
 
 ## Bitácora de reflexión
 
+### Actividad 10.
+la pieza utiliza el movimiento como una herramienta de dibujo, donde el lienzo no es un espacio estático, sino un registro histórico de las decisiones tomadas por cientos de agentes autónomos.
+Esta obra generativa es una metáfora visual de un agujero negro, donde la interacción del usuario representa una fuerza gravitatoria absoluta que curva no solo el espacio (los vectores), sino también el tiempo (los trazos acumulados). Utilizando la estética de Jared Tarbell, la pieza transforma el motor Motion 101 en un estudio sobre la entropía y la atracción masiva.
+https://editor.p5js.org/JorgeLuisSuarique/sketches/g8cMUoSvlg
+
+````js
+// --- PANEL DE CONTROL (Juega con estos valores) ---
+const cfg = {
+  cantidad: 10000,         // Cuántas luciérnagas hay
+  radio: 100,            // El radio de exclusión del mouse
+  atraccion: 1.25,       // Qué tan fuerte te persiguen (lejos)
+  repulsion: 1.2,        // Qué tan fuerte huyen (cerca)
+  orbita: 0.8,           // Qué tanto giran alrededor del mouse
+  friccion: 1.5,        // 1.0 = sin aire, 0.9 = denso como miel
+  opacidadTrazo: 100,     // Transparencia del punto (0-255)
+  persistenciaFondo: 4,  // 0 = rastro eterno, 255 = sin rastro
+  tamanoPunto: 3.2       // Grosor del trazo
+};
+
+let particles = [];
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  background(0);
+  for (let i = 0; i < cfg.cantidad; i++) {
+    particles.push(new Particle());
+  }
+}
+
+function draw() {
+  // Aplicamos la persistencia del fondo
+  background(0, cfg.persistenciaFondo); 
+
+  let mouse = createVector(mouseX, mouseY);
+  // Si el mouse no se ha movido, van al centro
+  if (mouseX === 0 && mouseY === 0) mouse.set(width/2, height/2);
+
+  for (let p of particles) {
+    p.interact(mouse);
+    p.update();
+    p.display();
+  }
+}
+
+class Particle {
+  constructor() {
+    this.pos = createVector(random(width), random(height));
+    this.vel = p5.Vector.random2D();
+    this.acc = createVector(0, 0);
+    this.maxSpeed = random(2, 5);
+  }
+
+  interact(target) {
+    let force = p5.Vector.sub(target, this.pos);
+    let d = force.mag();
+
+    if (d > cfg.radio) {
+      // ESTADO: Persecución
+      force.setMag(cfg.atraccion);
+    } else {
+      // ESTADO: Evasión y Órbita
+      let escape = force.copy().mult(-cfg.repulsion);
+      let orbit = createVector(-force.y, force.x).setMag(cfg.orbita);
+      force = escape.add(orbit); 
+    }
+    this.acc.add(force);
+  }
+
+  update() {
+    this.vel.add(this.acc);
+    this.vel.limit(this.maxSpeed);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+    this.vel.mult(cfg.friccion);
+    
+    // Teletransporte si salen de pantalla (opcional)
+    if (this.pos.x < 0) this.pos.x = width;
+    if (this.pos.x > width) this.pos.x = 0;
+    if (this.pos.y < 0) this.pos.y = height;
+    if (this.pos.y > height) this.pos.y = 0;
+  }
+
+  display() {
+    stroke(255, 230, 150, cfg.opacidadTrazo);
+    strokeWeight(cfg.tamanoPunto);
+    point(this.pos.x, this.pos.y);
+  }
+}
+````
+
+<img width="723" height="734" alt="image" src="https://github.com/user-attachments/assets/b2e97774-5a80-46c7-b6b0-40d8b17222d7" />
+
 

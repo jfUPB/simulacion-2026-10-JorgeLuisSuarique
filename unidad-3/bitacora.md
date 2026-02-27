@@ -792,6 +792,12 @@ https://editor.p5js.org/JorgeLuisSuarique/sketches/19HRTqZz_
 https://github.com/user-attachments/assets/1009b8e7-2cd3-4819-ae09-1c1880124819
 
 
-
-
 ## Bitácora de reflexión
+
+### Actividad 5.
+Explica detalladamente en tu bitácora ¿Qué es el marco de movimiento motion 101 y cómo se relacionan: fuerza, aceleración, velocidad y posición?
+El marco de movimi9ento de Motion 101 es un sistema en cadena de sumatoria de fuerzas basado en la segunda ley de Newton, en donde comberjen para que el moviemitnto se sienta mas vivo cuando programas arte generativo por mantener las sumatorias de fuerzas y mientras nostros podemos decidir en que se usa y en que no se usa en el mundo que creamos.
+Como se correlacionan como bien es la segunda ley de Newtoon "la sumatoria de todas las fuerzas es igual a la masa por sus aceleraciones", queriedo decir la ley de la fisica coesiste en si misma de la siguiente manera la velocidad es el cambio de la posicion, la aceleracion es el cambio de la velocidad, la fuerza es la masa multiplicada por la aceleracion y la poscioin es el lugar en el espacio, como bien vemos la fuerza, aceleración, velocidad y posición convergen entre si y en su mayoria dependen de cada uno para realisar la accion, el motion 101 describe todo esto en codigo procedural para el arte generativo.
+
+
+

@@ -799,5 +799,606 @@ Explica detalladamente en tu bitácora ¿Qué es el marco de movimiento motion 1
 El marco de movimi9ento de Motion 101 es un sistema en cadena de sumatoria de fuerzas basado en la segunda ley de Newton, en donde comberjen para que el moviemitnto se sienta mas vivo cuando programas arte generativo por mantener las sumatorias de fuerzas y mientras nostros podemos decidir en que se usa y en que no se usa en el mundo que creamos.
 Como se correlacionan como bien es la segunda ley de Newtoon "la sumatoria de todas las fuerzas es igual a la masa por sus aceleraciones", queriedo decir la ley de la fisica coesiste en si misma de la siguiente manera la velocidad es el cambio de la posicion, la aceleracion es el cambio de la velocidad, la fuerza es la masa multiplicada por la aceleracion y la poscioin es el lugar en el espacio, como bien vemos la fuerza, aceleración, velocidad y posición convergen entre si y en su mayoria dependen de cada uno para realisar la accion, el motion 101 describe todo esto en codigo procedural para el arte generativo.
 
+<img width="882" height="439" alt="image" src="https://github.com/user-attachments/assets/6f8e5681-5ba2-4ef3-bbb8-4963739c4c00" />
+
+https://editor.p5js.org/JorgeLuisSuarique/sketches/jMzUOK1Mg
+
+```` js
+// ============================================
+// 🖤 MÓVIL DE CALDER - EQUILIBRIO PERFECTO
+// Todo se mueve, nada cae
+// ============================================
+
+// ============================================
+// 🎬 CONFIGURACIÓN INICIAL
+// ============================================
+let movil;
+let viento = 0;
+let soplo = 0;
+let narracion = "";
+
+// Interacción
+let mouseAnteriorX = 0;
+let mouseAnteriorY = 0;
+let soplando = false;
+let inicioSoploX = 0;
+let inicioSoploY = 0;
+
+function setup() {
+  createCanvas(900, 700);
+  
+  // Crear el móvil con equilibrio perfecto
+  movil = new MovilCalder();
+  
+  narracion = "El punto de equilibrio... todo baila, nada cae";
+}
+
+function draw() {
+  background(255);
+  
+  // ==========================================
+  // 🌬️ VIENTO NATUAL (afecta a todo)
+  // ==========================================
+  viento = sin(frameCount * 0.004) * 0.2 + cos(frameCount * 0.003) * 0.15;
+  
+  // ==========================================
+  // 🖱️ INTERACCIÓN
+  // ==========================================
+  if (mouseIsPressed) {
+    soplo = 0.5;
+    dibujarSoplo(mouseX, mouseY);
+  } else {
+    soplo = 0;
+  }
+  
+  // SOPLO RÁPIDO
+  let velocidadMouse = dist(mouseX, mouseY, mouseAnteriorX, mouseAnteriorY);
+  if (velocidadMouse > 8) {
+    let soploFuerte = map(velocidadMouse, 8, 35, 0.3, 0.9);
+    movil.aplicarSoplo(mouseX, mouseY, soploFuerte);
+  }
+  
+  mouseAnteriorX = mouseX;
+  mouseAnteriorY = mouseY;
+  
+  // ==========================================
+  // 🔄 ACTUALIZAR MÓVIL
+  // ==========================================
+  movil.actualizar(viento, soplo, mouseX, mouseY);
+  movil.dibujar();
+  
+  // ==========================================
+  // 📖 NARRATIVA
+  // ==========================================
+  contarHistoria();
+  
+  // Texto
+  fill(0);
+  noStroke();
+  textFont('Georgia');
+  textSize(12);
+  text("🌬️ SOPLA: Mouse | Click + arrastre | R: reiniciar", 20, height - 20);
+  textSize(18);
+  textStyle(BOLD);
+  text("🖤 Móvil de Calder - El Equilibrio", 20, 40);
+  textStyle(NORMAL);
+  textSize(14);
+  text(narracion, 20, 65);
+}
+
+// ============================================
+// 🖤 CLASE MÓVIL CALDER
+// ============================================
+class MovilCalder {
+  constructor() {
+    // ===== PUNTO DE SUSPENSIÓN SUPERIOR =====
+    this.puntoSuperior = createVector(width/2, 80);
+    
+    // ===== LÍNEA VERTICAL CENTRAL (EJE DE EQUILIBRIO) =====
+    this.verticalCentral = new LineaEquilibrio(
+      this.puntoSuperior,                    // inicio
+      createVector(width/2, 200),            // fin (largo: 120px)
+      2.0,                                    // peso (más pesada, más estable)
+      true                                    // es el eje central
+    );
+    
+    // ===== GRAN LÍNEA HORIZONTAL (3 VECES MÁS LARGA) =====
+    // Se conecta al final de la vertical central
+    this.horizontalGrande = new LineaEquilibrio(
+      createVector(width/2, 200),                     // inicio (mismo punto)
+      createVector(width/2 + 240, 200),                // fin (120*2 = 240px)
+      1.5,                                              // peso medio
+      false,                                            // no es el eje
+      true                                              // es horizontal
+    );
+    
+    // También hacia la izquierda (simetría)
+    this.horizontalIzquierda = new LineaEquilibrio(
+      createVector(width/2, 200),
+      createVector(width/2 - 240, 200),
+      1.5,
+      false,
+      true
+    );
+    
+    // ===== 4 LÍNEAS VERTICALES FLEXIBLES (CUELGAN DE LA HORIZONTAL) =====
+    this.verticalesFlexibles = [];
+    let puntosX = [
+      width/2 - 180,
+      width/2 - 60,
+      width/2 + 60,
+      width/2 + 180
+    ];
+    
+    for (let i = 0; i < 4; i++) {
+      this.verticalesFlexibles.push(
+        new LineaFlexible(
+          createVector(puntosX[i], 200),  // inicio (en la horizontal)
+          100,                             // longitud
+          i,                               // id
+          1.2 - i * 0.1                    // peso (varía ligeramente)
+        )
+      );
+    }
+    
+    // ===== 16 HOJAS TRIANGULARES =====
+    this.hojas = [];
+    for (let v = 0; v < this.verticalesFlexibles.length; v++) {
+      let vertical = this.verticalesFlexibles[v];
+      
+      for (let h = 0; h < 4; h++) {
+        this.hojas.push(
+          new HojaTriangular(
+            vertical,                       // vertical padre
+            h,                              // posición en la vertical
+            v * 4 + h,                      // id único
+            0.8 + h * 0.1                    // peso (más livianas abajo)
+          )
+        );
+      }
+    }
+  }
+  
+  actualizar(viento, soplo, mouseX, mouseY) {
+    // Actualizar eje vertical central
+    this.verticalCentral.actualizar(viento, soplo, mouseX, mouseY);
+    
+    // Actualizar horizontales (su posición depende de la vertical central)
+    this.horizontalGrande.inicio = this.verticalCentral.fin.copy();
+    this.horizontalGrande.actualizar(viento, soplo, mouseX, mouseY);
+    
+    this.horizontalIzquierda.inicio = this.verticalCentral.fin.copy();
+    this.horizontalIzquierda.actualizar(viento, soplo, mouseX, mouseY);
+    
+    // Actualizar verticales flexibles (su inicio sigue a las horizontales)
+    for (let i = 0; i < this.verticalesFlexibles.length; i++) {
+      let vf = this.verticalesFlexibles[i];
+      
+      // El inicio de cada vertical flexible sigue el punto correspondiente en la horizontal
+      if (i < 2) {
+        // Las dos de la izquierda siguen la horizontal izquierda
+        let progreso = (i === 0) ? 0.7 : 0.3;
+        vf.inicio.x = this.horizontalIzquierda.inicio.x + 
+                     (this.horizontalIzquierda.fin.x - this.horizontalIzquierda.inicio.x) * progreso;
+        vf.inicio.y = this.horizontalIzquierda.fin.y;
+      } else {
+        // Las dos de la derecha siguen la horizontal derecha
+        let progreso = (i === 2) ? 0.3 : 0.7;
+        vf.inicio.x = this.horizontalGrande.inicio.x + 
+                     (this.horizontalGrande.fin.x - this.horizontalGrande.inicio.x) * progreso;
+        vf.inicio.y = this.horizontalGrande.fin.y;
+      }
+      
+      vf.actualizar(viento, soplo, mouseX, mouseY);
+    }
+    
+    // Actualizar hojas (su punto de anclaje sigue a las verticales flexibles)
+    for (let hoja of this.hojas) {
+      hoja.actualizar(viento, soplo, mouseX, mouseY);
+    }
+  }
+  
+  aplicarSoplo(mouseX, mouseY, intensidad) {
+    this.verticalCentral.aplicarSoplo(mouseX, mouseY, intensidad);
+    this.horizontalGrande.aplicarSoplo(mouseX, mouseY, intensidad);
+    this.horizontalIzquierda.aplicarSoplo(mouseX, mouseY, intensidad);
+    
+    for (let vf of this.verticalesFlexibles) {
+      vf.aplicarSoplo(mouseX, mouseY, intensidad);
+    }
+    
+    for (let hoja of this.hojas) {
+      hoja.aplicarSoplo(mouseX, mouseY, intensidad);
+    }
+  }
+  
+  dibujar() {
+    // Dibujar en orden (de atrás hacia adelante)
+    this.verticalCentral.dibujar(2.5);
+    this.horizontalGrande.dibujar(2.2);
+    this.horizontalIzquierda.dibujar(2.2);
+    
+    for (let vf of this.verticalesFlexibles) {
+      vf.dibujar();
+    }
+    
+    for (let hoja of this.hojas) {
+      hoja.dibujar();
+    }
+  }
+}
+
+// ============================================
+// 📏 LÍNEA DE EQUILIBRIO (se mueve con el viento)
+// ============================================
+class LineaEquilibrio {
+  constructor(inicio, fin, peso, esEje = false, esHorizontal = false) {
+    this.inicio = inicio.copy();
+    this.finInicial = fin.copy();
+    this.fin = fin.copy();
+    this.peso = peso;                // Mayor peso = más estable
+    this.esEje = esEje;              // El eje central es más firme
+    this.esHorizontal = esHorizontal;
+    
+    // Motion 101
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
+    
+    // Restitución (vuelve al equilibrio)
+    this.resistencia = 0.92;
+  }
+  
+  actualizar(viento, soplo, mouseX, mouseY) {
+    // Calcular posición de equilibrio (relativa al inicio)
+    let equilibrio = createVector(
+      this.inicio.x + (this.finInicial.x - this.inicio.x),
+      this.inicio.y + (this.finInicial.y - this.inicio.y)
+    );
+    
+    // Fuerza restauradora (más fuerte en el eje)
+    let restauracion = p5.Vector.sub(equilibrio, this.fin);
+    let fuerzaRestauracion = this.esEje ? 0.08 : 0.04;
+    restauracion.mult(fuerzaRestauracion);
+    this.acc.add(restauracion);
+    
+    // Viento (afecta menos al eje central)
+    let factorViento = this.esEje ? 0.3 : 0.8;
+    if (this.esHorizontal) factorViento *= 1.5; // La horizontal se mueve más
+    
+    let fuerzaViento = createVector(
+      viento * factorViento / this.peso,
+      this.esHorizontal ? viento * 0.1 : 0
+    );
+    this.acc.add(fuerzaViento);
+    
+    // Soplo del mouse
+    if (soplo > 0) {
+      let distancia = dist(this.fin.x, this.fin.y, mouseX, mouseY);
+      if (distancia < 200) {
+        let direccion = p5.Vector.sub(this.fin, createVector(mouseX, mouseY));
+        let fuerza = map(distancia, 0, 200, 0.5, 0);
+        direccion.setMag(soplo * fuerza / this.peso);
+        this.acc.add(direccion);
+      }
+    }
+    
+    // MOTION 101
+    this.vel.add(this.acc);
+    this.vel.mult(this.resistencia);
+    this.vel.limit(3 / this.peso);
+    this.fin.add(this.vel);
+    this.acc.mult(0);
+  }
+  
+  aplicarSoplo(mouseX, mouseY, intensidad) {
+    let distancia = dist(this.fin.x, this.fin.y, mouseX, mouseY);
+    if (distancia < 250) {
+      let direccion = p5.Vector.sub(this.fin, createVector(mouseX, mouseY));
+      let factor = map(distancia, 0, 250, 1, 0.2);
+      direccion.setMag(intensidad * factor * 0.5 / this.peso);
+      this.acc.add(direccion);
+    }
+  }
+  
+  dibujar(grosor = 2) {
+    push();
+    stroke(0);
+    strokeWeight(grosor);
+    line(this.inicio.x, this.inicio.y, this.fin.x, this.fin.y);
+    pop();
+  }
+}
+
+// ============================================
+// 🌿 LÍNEA FLEXIBLE (con columna vertebral)
+// ============================================
+class LineaFlexible {
+  constructor(inicio, longitud, id, peso) {
+    this.id = id;
+    this.inicio = inicio.copy();
+    this.longitud = longitud;
+    this.peso = peso;
+    
+    // Motion 101
+    this.fin = createVector(inicio.x, inicio.y + longitud);
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
+    
+    this.resistencia = 0.94;
+  }
+  
+  actualizar(viento, soplo, mouseX, mouseY) {
+    // Equilibrio (vertical desde el inicio)
+    let equilibrio = createVector(this.inicio.x, this.inicio.y + this.longitud);
+    
+    // Fuerza restauradora
+    let restauracion = p5.Vector.sub(equilibrio, this.fin);
+    restauracion.mult(0.06);
+    this.acc.add(restauracion);
+    
+    // Viento
+    let fuerzaViento = createVector(viento * 1.2 / this.peso, viento * 0.1);
+    this.acc.add(fuerzaViento);
+    
+    // Soplo
+    if (soplo > 0) {
+      let distancia = dist(this.fin.x, this.fin.y, mouseX, mouseY);
+      if (distancia < 150) {
+        let direccion = p5.Vector.sub(this.fin, createVector(mouseX, mouseY));
+        let fuerza = map(distancia, 0, 150, 0.4, 0);
+        direccion.setMag(soplo * fuerza / this.peso);
+        this.acc.add(direccion);
+      }
+    }
+    
+    // MOTION 101
+    this.vel.add(this.acc);
+    this.vel.mult(this.resistencia);
+    this.vel.limit(2);
+    this.fin.add(this.vel);
+    this.acc.mult(0);
+  }
+  
+  aplicarSoplo(mouseX, mouseY, intensidad) {
+    let distancia = dist(this.fin.x, this.fin.y, mouseX, mouseY);
+    if (distancia < 200) {
+      let direccion = p5.Vector.sub(this.fin, createVector(mouseX, mouseY));
+      let factor = map(distancia, 0, 200, 1, 0.2);
+      direccion.setMag(intensidad * factor * 0.4 / this.peso);
+      this.acc.add(direccion);
+    }
+  }
+  
+  dibujar() {
+    push();
+    stroke(0);
+    strokeWeight(1.5);
+    
+    // Línea principal
+    line(this.inicio.x, this.inicio.y, this.fin.x, this.fin.y);
+    
+    // "Columna vertebral" (pequeñas vértebras)
+    let pasos = 6;
+    for (let i = 1; i < pasos; i++) {
+      let t = i / pasos;
+      let x = lerp(this.inicio.x, this.fin.x, t);
+      let y = lerp(this.inicio.y, this.fin.y, t);
+      
+      strokeWeight(0.8);
+      line(x - 3, y, x + 3, y);
+    }
+    
+    pop();
+  }
+}
+
+// ============================================
+// 🍂 HOJA TRIANGULAR
+// ============================================
+class HojaTriangular {
+  constructor(verticalPadre, posicionVertical, id, peso) {
+    this.verticalPadre = verticalPadre;
+    this.posicionVertical = posicionVertical; // 0,1,2,3 (de arriba a abajo)
+    this.id = id;
+    this.peso = peso;
+    
+    // El punto de anclaje se actualizará en cada frame
+    this.puntoAnclaje = createVector(0, 0);
+    
+    // Motion 101 para la hoja
+    this.pos = createVector(0, 0);
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
+    
+    this.tamano = 12 + posicionVertical * 2; // Más grandes abajo
+    this.angulo = 0;
+    this.velAngular = 0;
+    
+    this.longitudHilo = 12;
+    this.resistencia = 0.95;
+    
+    // Personalidad
+    let tipos = ['elegante', 'inquieta', 'serena', 'libre'];
+    this.personalidad = tipos[id % 4];
+  }
+  
+  actualizar(viento, soplo, mouseX, mouseY) {
+    // Actualizar punto de anclaje (sigue a la vertical padre)
+    let t = (this.posicionVertical + 1) / 4; // 0.25, 0.5, 0.75, 1.0
+    this.puntoAnclaje.x = lerp(this.verticalPadre.inicio.x, this.verticalPadre.fin.x, t);
+    this.puntoAnclaje.y = lerp(this.verticalPadre.inicio.y, this.verticalPadre.fin.y, t);
+    
+    // Si es la primera vez, inicializar posición
+    if (this.pos.x === 0 && this.pos.y === 0) {
+      this.pos = createVector(
+        this.puntoAnclaje.x,
+        this.puntoAnclaje.y + this.longitudHilo
+      );
+    }
+    
+    // Equilibrio (justo debajo del anclaje)
+    let equilibrio = createVector(
+      this.puntoAnclaje.x,
+      this.puntoAnclaje.y + this.longitudHilo
+    );
+    
+    // Fuerza restauradora
+    let restauracion = p5.Vector.sub(equilibrio, this.pos);
+    restauracion.mult(0.05);
+    this.acc.add(restauracion);
+    
+    // Viento (más efecto en hojas inferiores)
+    let factorViento = 0.4 + this.posicionVertical * 0.2;
+    let fuerzaViento = createVector(viento * factorViento / this.peso, viento * 0.05);
+    this.acc.add(fuerzaViento);
+    
+    // Personalidad
+    if (this.personalidad === 'inquieta') {
+      this.acc.add(createVector(random(-0.02, 0.02), random(-0.01, 0.01)));
+    } else if (this.personalidad === 'libre') {
+      this.acc.add(createVector(sin(frameCount * 0.01 + this.id) * 0.02, 0));
+    }
+    
+    // Soplo
+    if (soplo > 0) {
+      let distancia = dist(this.pos.x, this.pos.y, mouseX, mouseY);
+      if (distancia < 130) {
+        let direccion = p5.Vector.sub(this.pos, createVector(mouseX, mouseY));
+        let fuerza = map(distancia, 0, 130, 0.5, 0);
+        direccion.setMag(soplo * fuerza / this.peso);
+        this.acc.add(direccion);
+      }
+    }
+    
+    // MOTION 101
+    this.vel.add(this.acc);
+    this.vel.mult(this.resistencia);
+    this.vel.limit(1.8);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+    
+    // Rotación
+    this.velAngular = this.vel.x * 0.02 + sin(frameCount * 0.02) * 0.01;
+    this.angulo += this.velAngular;
+  }
+  
+  aplicarSoplo(mouseX, mouseY, intensidad) {
+    let distancia = dist(this.pos.x, this.pos.y, mouseX, mouseY);
+    if (distancia < 150) {
+      let direccion = p5.Vector.sub(this.pos, createVector(mouseX, mouseY));
+      let factor = map(distancia, 0, 150, 1, 0.2);
+      direccion.setMag(intensidad * factor * 0.3 / this.peso);
+      this.acc.add(direccion);
+    }
+  }
+  
+  dibujar() {
+    push();
+    translate(this.pos.x, this.pos.y);
+    rotate(this.angulo);
+    
+    // Hilo
+    stroke(0, 40);
+    strokeWeight(0.5);
+    line(0, -this.longitudHilo, 0, 0);
+    
+    // Triángulo
+    stroke(0);
+    strokeWeight(1.2);
+    noFill();
+    
+    let t = this.tamano;
+    beginShape();
+    vertex(0, -t);
+    vertex(-t/1.5, t/2);
+    vertex(t/1.5, t/2);
+    endShape(CLOSE);
+    
+    // Veta
+    strokeWeight(0.6);
+    line(0, -t/2, 0, t/3);
+    
+    pop();
+  }
+}
+
+// ============================================
+// 🌬️ DIBUJAR SOPLO
+// ============================================
+function dibujarSoplo(x, y) {
+  push();
+  noFill();
+  stroke(0, 20);
+  strokeWeight(0.8);
+  
+  for (let i = 0; i < 3; i++) {
+    let tam = 40 + i * 30 + sin(frameCount * 0.1 + i) * 8;
+    ellipse(x, y, tam, tam * 0.6);
+  }
+  pop();
+}
+
+// ============================================
+// 📖 NARRATIVA
+// ============================================
+function contarHistoria() {
+  let tiempo = frameCount * 0.005;
+  let frases = [
+    "En el centro, el equilibrio...",
+    "La gran horizontal se mece con el viento...",
+    "Cuatro líneas flexibles, dieciséis hojas...",
+    "Todo baila, nada cae...",
+    "Como un Calder que respira...",
+    "Tu soplo las hace girar...",
+    "Pero siempre vuelven...",
+    "El equilibrio perfecto..."
+  ];
+  
+  let indice = floor(tiempo) % frases.length;
+  narracion = frases[indice];
+}
+
+// ============================================
+// 🖱️ INTERACCIONES
+// ============================================
+function mousePressed() {
+  soplando = true;
+  inicioSoploX = mouseX;
+  inicioSoploY = mouseY;
+}
+
+function mouseDragged() {
+  if (soplando) {
+    push();
+    stroke(0, 30);
+    strokeWeight(1);
+    line(inicioSoploX, inicioSoploY, mouseX, mouseY);
+    
+    let fuerza = dist(mouseX, mouseY, inicioSoploX, inicioSoploY);
+    noFill();
+    ellipse(mouseX, mouseY, fuerza/2, fuerza/3);
+    pop();
+  }
+}
+
+function mouseReleased() {
+  if (soplando) {
+    let direccion = createVector(mouseX - inicioSoploX, mouseY - inicioSoploY);
+    let fuerzaSoplo = direccion.mag();
+    direccion.normalize();
+    
+    movil.aplicarSoplo(mouseX, mouseY, fuerzaSoplo * 0.15);
+  }
+  soplando = false;
+}
+
+function keyPressed() {
+  if (key === 'R' || key === 'r') {
+    movil = new MovilCalder();
+  }
+}
+````
+
+
 
 

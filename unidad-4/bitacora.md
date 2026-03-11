@@ -128,11 +128,35 @@ class Mover {
 <img width="815" height="457" alt="image" src="https://github.com/user-attachments/assets/960da233-e89a-418c-8b8e-51863477ce88" />
 
 ### Actividad 4.
+**Identifica motion 101. ¿Qué modificación hay que hacer al motion 101 cuando se quiere agregar fuerzas acumulativas? Trata de recordar por qué es necesario hacer esta modificación.**
 
+El Motion 101 básico suele ser solo "posición + velocidad". Sin embargo, al introducir fuerzas, la modificación clave es que la aceleración debe reiniciarse al final de cada frame usando this.acceleration.mult(0). Es necesario hacer esto porque las fuerzas son acumulativas dentro de un mismo frame (puedes tener gravedad, viento y empuje actuando a la vez), pero no deben persistir al siguiente. Si no la limpiaras, el objeto guardaría el "impulso" anterior y saldría disparado infinitamente, violando las leyes de la física donde la fuerza causa una aceleración instantánea, no permanente.
+
+**Identifica dónde está el Attractor en la simulación. Cambia el color de este.**
+
+El Attractor es el círculo central (la "fuente de gravedad") que atrae a los demás objetos. Para cambiar su color, debes ir al archivo attractor.js, dentro del método display(). Busca la parte donde dice fill(175, 200); (que es el gris por defecto) y cámbialo por algo más llamativo, como un naranja o un azul profundo, por ejemplo: fill(255, 150, 0);. Esto hará que la "fuerza central" destaque visualmente de los Movers.
+
+**Observa que el Attractor tiene dos atributos this.dragging y this.rollover. Estos atributos no se modifican en el código, pero permitirían mover el attractor con el mouse y cambiar su color cuando el mouse está sobre él. ¿Cómo podrías modificar el código para que esto funcione? considera las funciones que ofrece p5.js para interactuar con el mouse.**
+
+Para que dragging y rollover funcionen, necesitas añadir lógica que compare la posición del mouse con la del Attractor. Podrías añadir métodos en la clase Attractor que usen dist(mouseX, mouseY, this.position.x, this.position.y).
+Para el Rollover: En cada frame verificas si esa distancia es menor al radio; si lo es, this.rollover = true.
+Para el Dragging: Usas las funciones globales de p5.js mousePressed() (para activar el arrastre si haces clic sobre él) y mouseReleased() (para soltarlo), permitiendo que el Attractor siga la posición del mouse mientras mantienes presionado el botón.
+
+
+### Actividad 5.
+**¿Cuál es la relación entre r y theta con las posiciones x y y?**
+La relación entre el radio ($r$) y el ángulo ($\theta$) con las posiciones cartesianas ($x$, $y$) se define mediante las funciones trigonométricas seno y coseno, donde $x$ representa la proyección horizontal del radio ($x = r \cdot \cos\theta$) y $y$ representa su proyección vertical ($y = r \cdot \sin\theta$). En esta estructura, mientras que en el sistema cartesiano nos movemos en una cuadrícula de filas y columnas, en el sistema polar nos desplazamos una distancia determinada ($r$) desde un punto de origen central siguiendo una dirección angular específica ($\theta$); de este modo, al variar el ángulo de forma constante en el código, los valores de $x$ y $y$ oscilan rítmicamente, permitiendo que un objeto dibuje trayectorias circulares, espirales o pulsaciones orgánicas en la pantalla.
+
+**Primera Modificacion de Draw**
+Al ejecutar este código, la simulación experimentará un error crítico o un comportamiento visual estático debido a que las variables $x$ e $y$ en la función line() ya no están definidas ni calculadas, lo que impide dibujar el trazo correctamente. Además, la función p5.Vector.fromAngle(theta) genera por defecto un vector unitario con una magnitud de tan solo 1 píxel, provocando que el círculo se dibuje prácticamente sobre el origen $(0,0)$ y su rotación sea imperceptible para el ojo humano. Esto ocurre porque se ha eliminado la lógica de conversión manual de coordenadas polares a cartesianas y no se ha proporcionado el radio ($r$) como segundo argumento al vector, resultando en un sistema que carece de la distancia necesaria para visualizar el movimiento circular en la pantalla.
+
+**Sogunda Modificacion de Draw**
+En esta segunda modificación, la simulación recupera su movimiento circular fluido porque la función p5.Vector.fromAngle(theta, r) ahora recibe el radio ($r$) como segundo argumento, realizando internamente toda la conversión trigonométrica de coordenadas polares a cartesianas que antes hacíamos de forma manual. Al asignar el resultado al vector v, las propiedades v.x y v.y contienen automáticamente los valores proyectados de la distancia y el ángulo, permitiendo que tanto la línea como el círculo se dibujen con la magnitud correcta desde el centro de la pantalla. Esto ocurre porque el método fromAngle simplifica el código al encapsular las fórmulas de seno y coseno en un solo objeto vectorial, permitiendo que el objeto orbite a la distancia definida por el radio mientras el ángulo theta aumenta en cada frame.
 
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 

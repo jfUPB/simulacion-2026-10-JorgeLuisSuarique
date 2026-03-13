@@ -153,10 +153,27 @@ Al ejecutar este código, la simulación experimentará un error crítico o un c
 **Sogunda Modificacion de Draw**
 En esta segunda modificación, la simulación recupera su movimiento circular fluido porque la función p5.Vector.fromAngle(theta, r) ahora recibe el radio ($r$) como segundo argumento, realizando internamente toda la conversión trigonométrica de coordenadas polares a cartesianas que antes hacíamos de forma manual. Al asignar el resultado al vector v, las propiedades v.x y v.y contienen automáticamente los valores proyectados de la distancia y el ángulo, permitiendo que tanto la línea como el círculo se dibujen con la magnitud correcta desde el centro de la pantalla. Esto ocurre porque el método fromAngle simplifica el código al encapsular las fórmulas de seno y coseno en un solo objeto vectorial, permitiendo que el objeto orbite a la distancia definida por el radio mientras el ángulo theta aumenta en cada frame.
 
+### Actividad 6.
+La reflexión principal es que esta modificación transforma una fórmula matemática abstracta en una experiencia física tangible. Al permitirnos manipular variables como la amplitud o el periodo en tiempo real, dejamos de ver la sinusoide como una simple línea curva en un libro y empezamos a entenderla como un lenguaje de movimiento.
+
+### Actividad 7.
+El aprendizaje fundamental de este proceso es que el código deja de ser una máquina de repetición para convertirse en un sistema vivo cuando sustituimos los valores estáticos por relaciones dinámicas. Al cambiar el random() por el Ruido de Perlin, aprendemos que la naturaleza no es caótica, sino coherente; la aleatoriedad orgánica permite que cada agente mantenga su individualidad sin romper la armonía del conjunto.
+
+### Actividad 8.
+El proceso consistió en transformar una estructura matemática estática en un sistema dinámico mediante la gestión del tiempo y la fase. Trasladamos la lógica del setup() al draw() para permitir el redibujo constante y creamos una variable de fase global (startAngle) que evoluciona en cada fotograma; al utilizar esta variable como punto de partida para el ángulo de cada círculo, logramos que la función seno se desplace horizontalmente, convirtiendo una oscilación individual de "arriba y abajo" en una percepción visual de movimiento colectivo que fluye como una ola.
+
+### Actividad 9.
+El proceso consistió en transformar un sistema simple en una cadena física mediante la duplicación de elementos y el anclaje dinámico. Añadimos un segundo cuerpo y un segundo resorte, pero con la diferencia crucial de que el punto de apoyo del nuevo resorte no es un punto fijo en el techo, sino la posición en tiempo real del primer cuerpo.
+
+### Actividad 10.
+El proceso consistió en crear una jerarquía de movimiento donde el segundo péndulo utiliza la masa del primero como su propio punto de anclaje dinámico. Al actualizar el vector pivot del segundo péndulo con la posición actual del bob del primero en cada fotograma, logramos que la base del segundo sistema se desplace continuamente; esto permite que el segundo eslabón herede la velocidad y el ángulo del anterior, transformando dos oscilaciones simples en un sistema acoplado con trayectorias mucho más complejas y realistas.
+
 ## Bitácora de aplicación 
 
+### Actividad 11.
 
 
 ## Bitácora de reflexión
+
 
 

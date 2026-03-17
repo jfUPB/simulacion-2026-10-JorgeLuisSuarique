@@ -171,9 +171,135 @@ El proceso consistió en crear una jerarquía de movimiento donde el segundo pé
 ## Bitácora de aplicación 
 
 ### Actividad 11.
+El concepto de esta obra se basa en la tensión entre el orden geológico y la entropía climática, utilizando el perfil de los Andes como un oscilador matemático que regula la creación de materia. Bajo esta premisa, la narrativa del "páramo" dicta las reglas del sistema: una función seno actúa como un emisor topográfico que genera partículas sujetas a vectores de viento lateral y degradación de energía, simulando el frío extremo. La interacción no es un simple evento estético, sino una variable térmica que modifica el estado físico de los agentes, donde el cursor funciona como un campo de fuerza que altera la aceleración y la luminiscencia, transformando la trayectoria lineal en una danza de supervivencia orgánica.
 
+````js
+let startAngle = 0; // Tu lógica original de fase
+let angleVelocity = 0.2; // Tu lógica original de frecuencia
+let amplitude = 100; // Tu lógica original de altura
+
+let particles = []; // Sistema de Motion 101
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  textFont('Courier New');
+}
+
+function draw() {
+  // Fondo oscuro con estela para un efecto visual cinético
+  background(10, 15, 20, 35); 
+
+  drawTopoGrid();
+
+  // El ángulo local comienza desde el ángulo de inicio global (Tu lógica)
+  let angle = startAngle;
+
+  for (let x = 0; x <= width; x += 30) {
+    // 1) Calculamos la posición Y (Tu lógica original)
+    let y = amplitude * sin(angle) + height / 2;
+    
+    // 2) Dibujamos el "Emisor" (Tu círculo original, pero estilizado)
+    stroke(180, 220, 255, 50);
+    noFill();
+    circle(x, y, 10); // Círculos más pequeños para que la obra respire
+    
+    // 3) NARRATIVA: Cada círculo emite partículas basadas en su posición
+    if (frameCount % 3 == 0) {
+      particles.push(new Brizna(x, y));
+    }
+    
+    // 4) Incrementamos el ángulo para la forma de la onda (Tu lógica)
+    angle += angleVelocity;
+  }
+
+  // --- MOVIMIENTO DE LAS PARTÍCULAS (Fuerzas y Motion 101) ---
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    
+    // Fuerza de Viento de Valle
+    let wind = createVector(0.1, 0.02);
+    p.applyForce(wind);
+
+    // Interacción: El Mouse como Núcleo Térmico
+    let mouse = createVector(mouseX, mouseY);
+    let distToMouse = p5.Vector.dist(p.pos, mouse);
+    if (distToMouse < 150) {
+      let lift = p5.Vector.sub(mouse, p.pos);
+      lift.setMag(0.8);
+      p.applyForce(lift);
+      p.ignite();
+    }
+
+    p.update();
+    p.show();
+    if (p.isDead()) particles.splice(i, 1);
+  }
+
+  // Empujamos la fase global (Tu truco para el movimiento)
+  startAngle += 0.05; 
+  
+  displayHUD();
+}
+
+class Brizna {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = createVector(random(-1, 1), random(-1, 1));
+    this.acc = createVector(0, 0);
+    this.energy = 255;
+    this.active = false;
+  }
+
+  applyForce(f) { this.acc.add(f); }
+
+  ignite() {
+    this.energy = min(this.energy + 15, 255);
+    this.active = true;
+  }
+
+  update() {
+    this.vel.add(this.acc);
+    this.vel.limit(5);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+    this.energy -= 2.5; 
+  }
+
+  show() {
+    let col = this.active ? color(255, 180, 50) : color(255, 255, 255);
+    stroke(col, this.energy);
+    strokeWeight(this.active ? 3 : 1);
+    
+    // Dibujamos un vector de velocidad
+    let nextPos = p5.Vector.add(this.pos, p5.Vector.mult(this.vel, 3));
+    line(this.pos.x, this.pos.y, nextPos.x, nextPos.y);
+  }
+
+  isDead() { return this.energy < 0 || this.pos.x > width || this.pos.y > height; }
+}
+
+function drawTopoGrid() {
+  stroke(255, 10);
+  for (let i = 0; i < height; i += 50) line(0, i, width, i);
+}
+
+function displayHUD() {
+  fill(180, 220, 255, 150);
+  noStroke();
+  textSize(12);
+  text("RECONSTRUCCIÓN DE FLUJO: LOS ANDES", 30, 40);
+  text("PARTÍCULAS EN CAMPO: " + particles.length, 30, 60);
+  textAlign(CENTER);
+  text("[ INTERACTÚE CON EL CURSOR PARA GENERAR ASCENDENCIAS TÉRMICAS ]", width / 2, height - 30);
+}
+````
+<img width="913" height="725" alt="image" src="https://github.com/user-attachments/assets/f57731e1-2136-4f93-a2b8-cacd9fb1b2de" />
 
 ## Bitácora de reflexión
 
+### Actividad 12.
+<img width="1804" height="716" alt="image" src="https://github.com/user-attachments/assets/3c616867-d466-4d2b-b1ed-e3fcad649bf7" />
 
+**Perfil Profecional**.
+Todo el concepto que se a visto en esta unidad y en las anteriores es el uso de la simulacion de fisicas y la animacion por parte de Procedural en VFX para videojuegos, seriris y cine, tambie ayudaria bastante enb el campo de museografia y en apoyo a las proyectos de investigacion en otros campos.
 

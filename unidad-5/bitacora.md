@@ -18,6 +18,22 @@
 - **Dibuja un diagrama que muestre la jerarquía: sketch → [emitters] → [partículas]. ¿Cuántos niveles de “colección” hay?**
 - **Describe este ejemplo usando palabras que NO mencionen p5.js, JavaScript, ni ninguna herramienta específica. Usa solo términos como: entidad, estado, colección, emisor, ciclo de vida, fuerza.**
 
+### Actividad 3.
+- **¿Qué tienen en común las subclases de partículas? ¿Qué tienen de diferente?**
+  Lo que tienen  en común todas las sub clases son las caracteristcas que no estan sobre escritas y su diferencia son las caracteristicas Sobre Escritas.
+- **¿Por qué es importante que el Emitter no necesite saber qué tipo específico de partícula está gestionando? Explica esto con tus propias palabras.**
+  El Emitter es una clase independiente que ya tiene una estructura propia y simplificada, en donde es llamado a cada sunclase de particulas para que su función se combine con la de las particulas
+- **Si mañana quisieras agregar un tercer tipo de partícula, ¿Qué tendrías que crear y qué NO tendrías que modificar?**
+  
+- **Compara con Example 4.2: ¿Cambió la lógica del Emitter? ¿Cambió la lógica de muerte? ¿Qué capa del sistema se modificó y cuáles permanecieron intactas?**
+
+
+### Actividad 4.
+- **En Example 4.6, ¿Dónde se define la gravedad? ¿Quién la aplica a las partículas? ¿Es una fuerza global o local?**
+- **En Example 4.7, ¿Qué diferencia hay entre la gravedad y la fuerza del repeller? ¿Dónde “vive” cada una?**
+- **La fuerza del repeller depende de la distancia entre la partícula y el repeller. ¿Qué principio físico se está modelando?**
+- **¿Cambió la clase Particle entre Example 4.6 y 4.7? ¿Qué implica esto sobre la separación entre comportamiento de la partícula y fuerzas externas?**
+
 ## Bitácora de aplicación 
 
 

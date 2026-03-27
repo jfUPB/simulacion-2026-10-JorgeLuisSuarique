@@ -294,7 +294,7 @@ function displayHUD() {
 }
 ````
 <img width="913" height="725" alt="image" src="https://github.com/user-attachments/assets/f57731e1-2136-4f93-a2b8-cacd9fb1b2de" />
-
+https://editor.p5js.org/JorgeLuisSuarique/sketches/0JKmZOV1g
 ## Bitácora de reflexión
 
 ### Actividad 12.

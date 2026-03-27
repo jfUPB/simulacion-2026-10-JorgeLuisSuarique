@@ -117,7 +117,147 @@ https://editor.p5js.org/natureofcode/sketches/H4TMayNak
 
 ### Actividad 5.
 
+- El nasimiento y la muerte de una estrella es un ciclo que rosa lo perpuetuo mostrando una perspectiva de la vida y el tiempo de manera circular.
+
+- El cosmos se comporta como nosotros vemos las ideas y la manera de ver en la humanida, estalla y vuelve a comensar desde cero hasta que veulve a estallar.
+
+<img width="1297" height="678" alt="image" src="https://github.com/user-attachments/assets/7c16d25f-3d3e-4485-801f-50251987f547" />
+<img width="1293" height="677" alt="image" src="https://github.com/user-attachments/assets/7a0f4d61-a7c5-48a0-8fc4-fc2adddee6e7" />
+
+
+https://editor.p5js.org/JorgeLuisSuarique/sketches/WJR5tTdOi
+```` js
+let nebulae = [];
+let star = null;
+let supernovae = [];
+
+let fase = "nebula"; // "nebula", "star", "explosion"
+
+function setup() {
+  createCanvas(800, 600);
+  // Iniciar con nebulosas
+  for (let i = 0; i < 80; i++) {
+    nebulae.push(new Nebula(random(width), random(height)));
+  }
+}
+
+function draw() {
+  background(0, 30);
+  
+  if (fase === "nebula") {
+    // ========== FASE NEBULOSA ==========
+    
+    // Mover nebulosas con atracción al mouse
+    for (let n of nebulae) {
+      if (mouseIsPressed) {
+        let mouse = createVector(mouseX, mouseY);
+        let dir = p5.Vector.sub(mouse, n.position);
+        let dist = constrain(dir.mag(), 5, 100);
+        let force = dir.copy().setMag(0.2);
+        n.applyForce(force);
+      }
+      n.update();
+      n.show();
+    }
+    
+    // Detectar colapso: si hay muchas nebulosas cerca del mouse
+    if (mouseIsPressed) {
+      let mousePos = createVector(mouseX, mouseY);
+      let cerca = [];
+      for (let n of nebulae) {
+        if (n.position.dist(mousePos) < 40) {
+          cerca.push(n);
+        }
+      }
+      
+      if (cerca.length >= 12) {
+        // Eliminar todas las nebulosas
+        nebulae = [];
+        // Crear estrella
+        star = new Star(mouseX, mouseY);
+        fase = "star";
+      }
+    }
+    
+    // Instrucciones
+    fill(255);
+    text("Fase: Nebulosa", 10, 20);
+    text("Arrastra el mouse para juntar nebulosas", 10, 40);
+    text("Junta 12 nebulosas cerca del mouse para crear una estrella", 10, 60);
+    
+  } else if (fase === "star") {
+    // ========== FASE ESTRELLA ==========
+    
+    // Actualizar y mostrar estrella
+    star.update();
+    star.show();
+    
+    // Si la estrella muere, pasar a explosión
+    if (star.isDead()) {
+      // Crear supernovas
+      for (let i = 0; i < 60; i++) {
+        supernovae.push(new Supernova(star.position.x, star.position.y));
+      }
+      star = null;
+      fase = "explosion";
+    }
+    
+    // Instrucciones
+    fill(255);
+    text("Fase: Estrella", 10, 20);
+    text("La estrella crece... pronto explotará", 10, 40);
+    
+  } else if (fase === "explosion") {
+    // ========== FASE EXPLOSIÓN ==========
+    
+    // Actualizar y mostrar supernovas
+    for (let i = supernovae.length - 1; i >= 0; i--) {
+      let s = supernovae[i];
+      s.update();
+      s.show();
+      if (s.isDead()) {
+        supernovae.splice(i, 1);
+      }
+    }
+    
+    // Mientras hay supernovas, generar nuevas nebulosas gradualmente
+    if (supernovae.length > 0 && nebulae.length < 60) {
+      // Aparecen nuevas nebulosas de a poco
+      for (let i = 0; i < 2; i++) {
+        nebulae.push(new Nebula(random(width), random(height)));
+      }
+    }
+    
+    // Cuando ya no hay supernovas y hay suficientes nebulosas, volver a fase nebulosa
+    if (supernovae.length === 0 && nebulae.length >= 30) {
+      fase = "nebula";
+    }
+    
+    // Instrucciones
+    fill(255);
+    text("Fase: Explosión", 10, 20);
+    text("La estrella explotó... nuevas nebulosas están naciendo", 10, 40);
+    text("Nebulosas: " + nebulae.length, 10, 60);
+  }
+}
+````
+<img width="815" height="737" alt="image" src="https://github.com/user-attachments/assets/443b51e7-9b1c-4c5d-9a5d-82e8baa1c101" />
+<img width="814" height="725" alt="image" src="https://github.com/user-attachments/assets/b06d7415-9681-443c-a16f-99f5ca37f946" />
+<img width="808" height="728" alt="image" src="https://github.com/user-attachments/assets/cf3f6dff-a7bb-48f4-b1b7-a02f7f7bf9e8" />
 
 ## Bitácora de reflexión
+### Actividad 6.
+**Parte 1.**
+- Una partícula es una entidad con estado.
+- Una partícula tiene ciclo de vida.
+- Un sistema de partículas gestiona colecciones dinámicas de elementos.
+- La creación y eliminación de partículas no es un detalle técnico menor, sino parte central del modelo.
+- Debe haber separación entre la lógica de una partícula individual y la lógica del sistema/emisor.
+- Un emisor o particle system es una abstracción importante.
+- Pueden existir sistemas de sistemas.
+- Puede haber heterogeneidad usando herencia y polimorfismo.
+- Las partículas pueden responder a fuerzas globales y locales.
+- La representación visual puede variar sin cambiar el principio algorítmico de fondo.
 
-### Actividad 5.
+**Parte 2.**
+Piensa en tu pieza del Apply: si la quisieras recrear en Unity (o TouchDesigner, o Blender), ¿Qué se mantendría igual y qué cambiaría? ¿Qué partes de tu diseño son independientes de la herramienta?

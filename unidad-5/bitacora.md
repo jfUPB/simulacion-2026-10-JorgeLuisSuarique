@@ -249,15 +249,27 @@ function draw() {
 ### Actividad 6.
 **Parte 1.**
 - Una partícula es una entidad con estado.
+  En todos los proyectos, cada partícula almacena posición, velocidad, aceleración, masa y tiempo de vida.
 - Una partícula tiene ciclo de vida.
+  Desde el primer proyecto, las partículas nacen (se añaden), se transforman (cambian de tamaño, color, opacidad) y mueren se eliminan cuando lifespan llega a cero.
 - Un sistema de partículas gestiona colecciones dinámicas de elementos.
+  El Emitter en los proyectos 1, 2, 4 y 5, y el arreglo global en el proyecto 3, son responsables de mantener la colección de partículas, agregar nuevas y eliminar las muertas.
 - La creación y eliminación de partículas no es un detalle técnico menor, sino parte central del modelo.
+  En el proyecto final, la transición entre fases (nebula → star → explosion) depende enteramente de cuándo y cómo se crean y eliminan partículas.
 - Debe haber separación entre la lógica de una partícula individual y la lógica del sistema/emisor.
+  La clase Particle (o CosmicParticle) nunca sabe en qué colección está ni quién la creó. Solo sabe actualizar su estado y mostrarse.
 - Un emisor o particle system es una abstracción importante.
+  En los proyectos 1, 2, 4 y 5, la clase Emitter encapsula la colección y los métodos para agregar, aplicar fuerzas y actualizar.
 - Pueden existir sistemas de sistemas.
+  En el proyecto 1, había una colección de emisores (cada uno con su propia colección de partículas).
 - Puede haber heterogeneidad usando herencia y polimorfismo.
+  En el proyecto 2, Confetti heredaba de Particle y sobrescribía show(), permitiendo que el emisor tratara a todas las partículas de forma uniforme mientras cada una se visualizaba diferente.
 - Las partículas pueden responder a fuerzas globales y locales.
+  la gravedad era un vector constante que el emisor aplicaba a todas las partículas por igual.el repeller calculaba una fuerza personalizada para cada partícula según su distancia. En el proyecto final, la atracción al mouse es una fuerza local y la atracción estelar también es local.
 - La representación visual puede variar sin cambiar el principio algorítmico de fondo.
+  En todos los proyectos, la lógica de movimiento, fuerzas y ciclo de vida es independiente de cómo se dibuja cada partícula.
 
 **Parte 2.**
 Piensa en tu pieza del Apply: si la quisieras recrear en Unity (o TouchDesigner, o Blender), ¿Qué se mantendría igual y qué cambiaría? ¿Qué partes de tu diseño son independientes de la herramienta?
+
+En Blender se mantendría igual la lógica de estados y transiciones: el ciclo nebulosa → estrella → supernova → nebulosa, la condición de colapso por proximidad y la muerte por tiempo. Lo que cambiaría es la forma de implementarlo: en lugar de código en sketch.js, usaría el sistema de partículas de Blender con emisores que cambian de propiedad en fotogramas clave, y emplearía drivers o lógica de nodos en Geometry Nodes para controlar cuándo un grupo de partículas se transforma en otro.

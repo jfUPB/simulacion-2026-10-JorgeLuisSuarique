@@ -59,8 +59,93 @@ es una fuerza interna que el propio agente genera para cambiar su trayectoria de
 La diferencia clave entre una steering force y una fuerza externa como la gravedad es que la gravedad es ciega y universal: empuja todo hacia abajo sin preguntar. La steering force, en cambio, es inteligente y contextual: cambia según lo que el agente percibe en ese momento. Mientras la gravedad siempre suma el mismo vector (0, 0.1), una steering force puede ser "acelera hacia el mouse" o "aléjate de ese obstáculo", y su valor se recalcula en cada instante en función de la posición del agente y del entorno.
 
 ### Actividad 3.
+
+**¿Cómo está construido el campo de flujo?**
+
+El campo de flujo se construye como una cuadrícula invisible que cubre todo el lienzo, donde cada celda de esa cuadrícula contiene un vector (una flecha) que indica una dirección. Para crearlo, se define primero la resolución (por ejemplo, 20 píxeles por celda), se calcula cuántas columnas y filas entran en el lienzo, y luego se usa un bucle anidado para rellenar cada celda con un vector, cuya dirección puede venir de diferentes fuentes: ruido de Perlin, un patrón matemático como un círculo, o incluso la lectura de una imagen.
+
+**¿Qué representa cada celda o vector del campo?**
+
+Cada vector representa la "velocidad deseada" ideal para cualquier partícula que se encuentre exactamente en esa celda. Es como una señal invisible en ese punto del espacio que le susurra al agente: "Si pasas por aquí, deberías intentar moverte en esta dirección". La intensidad del vector (su longitud) indica qué tan rápido querría ir el agente idealmente, aunque luego cada agente puede decidir si obedece o no según sus propias limitaciones.
+
+**¿Cómo usa un agente su posición para consultar el campo?**
+
+El agente usa su posición actual (x, y) para "mapearse" dentro de la cuadrícula: divide su coordenada x por la resolución de la celda para saber en qué columna está, y su coordenada y por la resolución para saber en qué fila está. Es como si el lienzo fuera un tablero de ajedrez gigante y el agente tuviera que mirar el suelo para ver en qué casilla está parado, y luego leer la flecha dibujada en esa casilla.
+
+**¿Cómo se convierte el vector consultado en una decisión de movimiento?**
+
+El agente toma ese vector del campo de flujo y lo trata como su "velocidad deseada", es decir, hacia dónde le gustaría ir. Luego aplica la fórmula de steering de Reynolds: resta su velocidad actual de esa velocidad deseada, lo que genera una fuerza de dirección (steering force). Esta fuerza se limita (para no ser demasiado brusca) y se suma a su aceleración, desviando suavemente su trayectoria para alinearse con el campo de flujo.
+
+**resolución:** Tamaño de cada celda en píxeles (ej: 20). Define cuántas celdas hay (cols = width/resolución, rows = height/resolución). A menor resolución, más celdas y más detalle; a mayor resolución, menos celdas y un campo más tosco.
+
+**maxspeed:** Velocidad máxima que puede alcanzar cada vehículo. Limita qué tan rápido se mueven los agentes.
+
+**maxforce:** Fuerza de dirección máxima que puede aplicar un vehículo para girar. Controla qué tan brusco o suave es el cambio de dirección.
+
+**cantidad de agentes:** Número de vehículos que siguen el campo de flujo. Más agentes generan más densidad y patrones colectivos; menos agentes hacen visible la trayectoria individual.
+
+Voy a cambiar el incremento de yoff dentro del bucle anidado en init() de 0.1 a 0.05. Esto hace que el ruido de Perlin varíe más lentamente en la dirección vertical. El efecto visual es que el campo de flujo se vuelve más "suave" y las transiciones entre direcciones de vectores son menos abruptas, generando que los agentes sigan curvas más amplias y menos fragmentadas, como si el viento o la corriente tuviera cambios más graduales en lugar de giros bruscos. Visualmente se pierde algo de la textura "ruidosa" original y se gana en fluidez.
+
+**¿Qué tipo de movimiento produce este algoritmo?**
+
+El algoritmo de flow field produce un movimiento orgánico y fluido donde múltiples agentes se deslizan siguiendo las direcciones invisibles marcadas por una cuadrícula de vectores generada con ruido de Perlin, creando trayectorias suaves que se curvan y entrecruzan sin que los agentes choquen entre sí, como hojas arrastradas por corrientes de aire o agua.
+
+**¿Qué sensaciones visuales te sugiere?**
+
+Visualmente me sugiere calma hipnótica y movimiento colectivo sin propósito aparente, como observar un banco de peces o una bandada de pájaros desde lejos, donde cada individuo parece seguir una coreografía invisible generando una sensación de orden emergente y fluidez relajante.
+
+**¿En qué tipo de pieza musical imaginas que podría funcionar bien?**
+
+Esta pieza funcionaría bien con música electrónica ambiental y texturas modulares en evolución, similar a las obras de Brian Eno o del minimalismo de Steve Reich, donde capas sonoras que se repiten generan patrones complejos que nunca son exactamente iguales, creando una experiencia inmersiva y contemplativa.
+
 ### Actividad 4.
+
+- **Separación:** Es la regla que hace que cada agente evite chocar con sus vecinos más cercanos, generando una fuerza que lo empuja en dirección opuesta cuando alguien invade su espacio personal.
+
+- **Alineación:** Es la tendencia de cada agente a ajustar su dirección y velocidad para igualar el promedio de sus vecinos, logrando que todos se muevan en sintonía como una bandada coordinada.
+
+- **Cohesión:** Es la fuerza que empuja a cada agente hacia el centro del grupo calculando el punto medio de las posiciones de sus vecinos, evitando que alguien se rezague y manteniendo la unidad de la bandada.
+
+Los parámetros clave son el radio de percepción (neighborDistance), la distancia mínima de separación (desiredSeparation) y los pesos de cada fuerza (como 1.5 para separación, 1.0 para alineación y cohesión).
+
+Cambié el peso de separación en la función flock de 1.5 a 3.0. El efecto visual es que la bandada se vuelve mucho más dispersa y nerviosa, los boids mantienen una distancia mayor entre sí y el grupo pierde su forma compacta original. El comportamiento emergente cambia de compacto y fluido a disperso y cauteloso, donde la separación domina por completo sobre la cohesión.
+
+- **Compacto:** La bandada se mantiene muy unida, con los boids casi pegados entre sí formando una masa densa que se mueve como un solo organismo.
+
+- **Disperso:** Los agentes se separan y ocupan un área grande del lienzo, manteniendo distancias considerables entre ellos sin formar un grupo definido.
+
+- **Estable:** El movimiento es predecible y constante, sin cambios bruscos de dirección o velocidad, como un río que fluye sin sobresaltos.
+
+- **Nervioso:** Los boids cambian de dirección constantemente de manera rápida e impredecible, generando una sensación de agitación y alerta continua.
+
+- **Caótico:** No hay ningún orden aparente, los agentes chocan entre sí y se mueven en direcciones contradictorias sin seguir ninguna regla colectiva.
+
+- **Fluido:** El movimiento es suave y continuo, con transiciones elegantes donde la bandada se estira, se contrae y gira como una sola masa líquida.
+
+**¿Qué atmósfera visual produce el flocking?**
+
+El flocking produce una atmósfera hipnótica y orgánica que sugiere vida colectiva, inteligencia sin líder y calma, como observar un banco de peces deslizándose bajo el agua o una bandada de pájaros trazando figuras en el cielo.
+
+**¿En qué tipo de relación con una canción podría funcionar mejor este algoritmo?**
+
+Este algoritmo funcionaría mejor en relación con una canción de electrónica ambiental o post-rock instrumental, donde las capas melódicas se superponen y evolucionan lentamente sin golpes de batería ni cambios bruscos, permitiendo que la música respire y se transforme al ritmo de la bandada.
+
 ### Actividad 5.
+
+- **Tipo de movimiento que producen:** El flow field produce un movimiento fluido y predecible donde todos los agentes siguen trayectorias suaves dictadas por una cuadrícula invisible, como hojas arrastradas por una corriente de agua. El flocking produce un movimiento orgánico y sincronizado donde los agentes se mueven en bandada siguiendo reglas locales de separación, alineación y cohesión, como pájaros o peces en la naturaleza.
+  
+- **Nivel de control visual:** El flow field ofrece un control visual muy alto porque el diseñador define explícitamente la dirección de los vectores en cada celda, pudiendo crear patrones geométricos, remolinos o flujos personalizados. El flocking ofrece un control visual bajo e indirecto porque el diseñador solo define pesos y radios, pero el comportamiento emergente no se puede predecir ni diseñar con precisión.
+  
+- **Nivel de emergencia:** El flow field tiene un nivel de emergencia bajo porque el movimiento global es la suma directa de las instrucciones del campo, sin interacciones complejas entre agentes. El flocking tiene un nivel de emergencia muy alto porque la forma de la bandada, sus giros y su cohesión surgen únicamente de las interacciones locales entre agentes, sin ningún líder ni plano global.
+  
+- **Tipo de atmósfera o sensación:** El flow field transmite una sensación de flujo controlado y destino marcado, como un río que lleva hojas o un viento que arrastra polen, con una calma que viene de la previsibilidad. El flocking transmite una sensación de vida impredecible y autonomía colectiva, como observar un banco de peces que cambia de forma constantemente, con una calma hipnótica que viene de la sincronía.
+  
+- **Relación posible con una pieza musical:** El flow field funcionaría bien con música minimalista y repetitiva como las composiciones de Steve Reich o Philip Glass, donde patrones que se repiten generan variaciones sutiles. El flocking funcionaría mejor con música ambiental y evolutiva como la de Brian Eno o Sigur Rós, donde capas sonoras se superponen y transforman lentamente sin estructura fija.
+  
+- **Ventajas y limitaciones de cada uno:** La ventaja del flow field es su predecibilidad y control total sobre el flujo, pero su limitación es que los agentes no interactúan entre sí, por lo que nunca se genera sorpresa ni comportamiento colectivo complejo. La ventaja del flocking es su capacidad de generar comportamientos emergentes sorprendentes y vidas simuladas, pero su limitación es la dificultad de controlar exactamente la forma final de la bandada, que puede volverse caótica si los pesos no están bien calibrados.
+
+##### Cancion
+La canción que pienso usar es DYSTOPIA de So Far So Good, Incredible Polo, siendo esta una canción eufórica por su ritmo rápido y letras sobre alcanzar estrellas, pero melancólica por su atmósfera de baja valencia y su estética cyberpunk que evoca soledad y urgencia. Para esta dualidad usaría flocking con alta velocidad y cohesión para la parte eufórica, logrando una bandada fluida que se expande como luces de neón acelerando, pero con un flow field de fondo que añada una deriva lenta y controlada, trayendo esa melancolía de fondo. Las agujas brillantes se moverían sincronizadas como coches en una autopista futurista, y en los momentos más intensos del drop haría que los agentes exploten radialmente con colores cian y magenta, para luego volver a unirse en formación, mezclando la energía del ritmo con la tristeza de fondo.
 
 ## Bitácora de aplicación 
 

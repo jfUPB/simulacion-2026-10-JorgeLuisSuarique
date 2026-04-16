@@ -149,5 +149,8 @@ La canción que pienso usar es DYSTOPIA de So Far So Good, Incredible Polo, sien
 
 ## Bitácora de aplicación 
 
+### Actividad 06:
+
+
 
 ## Bitácora de reflexión

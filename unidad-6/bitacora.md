@@ -151,6 +151,613 @@ La canción que pienso usar es DYSTOPIA de So Far So Good, Incredible Polo, sien
 
 ### Actividad 06:
 
+- **Concepto visual.**
+
+Autopista de datos: es una ciudad holográfica cyberpunk donde agentes luminosos (naves o vehículos de datos) circulan por un campo de flujo que simula una red de avenidas digitales. La masa de agentes se comprime en las intersecciones y se dispersa en las rectas, traduciendo visualmente la tensión entre la euforia rítmica y la melancolía atmosférica de la canción. Los cubos holográficos representan los edificios de la ciudad distópica, y las líneas de flujo forman el mapa urbano. La pieza funciona como un instrumento visual que el performer puede tocar en tiempo real.
+
+- **Relación entre la visual y la canción.**
+
+"DYSTOPIA" tiene un BPM de 139 y una dualidad emocional única: ritmo rápido y eufórico pero atmósfera melancólica y oscura. La visual responde directamente a esta dualidad. Los graves (bajos y bombo) controlan la expansión y contracción del campo de flujo, como latidos de la ciudad viva. Los medios (voces y sintetizadores) cambian la paleta de colores entre cian, magenta y azul neón. Los agudos (hats y texturas) aumentan la velocidad máxima y la fuerza de dirección de los agentes, acelerando la ciudad cuando la canción se intensifica. La amplitud general controla la densidad de agentes en escena, creciendo hacia los clímax y disminuyendo en los pasajes más íntimos.
+
+- **Moodboard o referencias.**
+
+- Tron Legacy (2010) — escenas del grid → Autopistas de luz, líneas neón sobre negro absoluto, sensación de velocidad inmersiva.
+
+- Blade Runner 2049 — hologramas urbanos → Mapas de ciudad flotantes, densos y azules, con texturas de interferencia.
+
+- Stuz0r — "Cyberpunk City" (serie de ilustraciones) → Cubos isométricos, neón magenta/cian, atmósfera lluviosa y decadente.
+
+- Incredibox Dystopia — trailer oficial → Visores LED, cyborgs, texturas glitch, paleta oscura con acentos brillantes.
+
+- Pinterest: "holographic city map cyberpunk" → Cuadrículas brillantes, puntos de datos flotantes, mapas aéreos con profundidad.
+
+- **Dos o más bocetos.**
+
+<img width="1359" height="763" alt="image" src="https://github.com/user-attachments/assets/c4859279-b5d2-466c-ad0c-63cc240c7826" />
+<img width="562" height="696" alt="image" src="https://github.com/user-attachments/assets/c253e398-9480-46ff-b618-79f730c4f009" />
+
+
+- **Mapa de decisiones.**
+
+<img width="1494" height="542" alt="image" src="https://github.com/user-attachments/assets/9ffb0105-a48e-4c08-a17a-928ea18e15cd" />
+
+- **Mapa de interpretación.**
+
+<img width="1127" height="849" alt="image" src="https://github.com/user-attachments/assets/90a261d0-b2e3-429a-8178-6bd763beea2d" />
+
+
+- **Justificación del algoritmo elegido.**
+
+Elegí una combinación híbrida de campo de flujo (flow field) y bandada (flocking) porque la canción "DYSTOPIA" tiene una dualidad entre el orden mecánico y el caos orgánico. El campo de flujo proporciona una estructura tipo autopista que refleja la parte rítmica y eufórica, mientras que las reglas de flocking aportan imprevisibilidad y vida colectiva, traduciendo la melancolía y la tensión emocional. Esta mezcla permite que el intérprete controle en vivo el equilibrio entre ambos, haciendo que la visual sea tan dinámica y contrastante como la música.
+
+- **Explicación de la relación audio-visual.**
+
+La relación audio-visual se basa en el análisis en tiempo real de la frecuencia y amplitud de la canción mediante FFT. Los graves modifican el color y la escala del campo de flujo, haciendo que la cuadrícula de líneas se tiña de magenta y pulse al ritmo del bombo. Los agudos controlan la velocidad y la fuerza de los agentes, acelerando el movimiento de las partículas en los momentos más intensos. La energía general ajusta la densidad de agentes, de modo que la música no es un fondo, sino el motor que esculpe constantemente la forma, el color y la dinámica de la ciudad holográfica.
+
+- **Evidencia del uso de IA.**
+
+La IA me ayudo en el refuerzo de la idea, me ayudó a crear el script para este proyecto, mientras yo lo guiaba enfocándome en los resultados y la idea artística. Durante este proceso tenia siempre una idea, pero habían conceptos técnicos como el nombre del estilo y patrones al usarlo que la IA me ayudo a esclarecer, mientras yo me aseguraba de cada idea en la manera de como mostrarla y en que perspectiva evidenciar los resultados.
+
+- **Código fuente.**
+```` js
+// DYSTOPIA - Autopista de Datos v2
+// Partículas con ciclo de vida + ciudad isométrica + audio reactivo
+
+let agents = [];
+let flowField;
+let fft;
+let audio;
+let isPlaying = false;
+
+// Parámetros del sistema
+let agentCount = 150;
+let useFlowField = true;
+let useFlocking = true;
+let colorMode = 0;
+let nightMode = false;
+
+// Controles performativos
+let maxspeedBase = 5;
+let maxforceBase = 0.3;
+let mouseForceMult = 1.0;
+let mouseSpeedMult = 1.0;
+
+// Elementos visuales
+let cityBlocks = [];
+let trailsEnabled = true;
+let repeller = null;
+let repellerTimer = 0;
+
+// Ciclo de vida
+let agentLifespanMax = 300;    // frames que vive cada agente
+let spawnRate = 2;             // cuántos agentes nuevos por frame al mantener densidad
+
+// Paletas de colores (se pueden modificar dinámicamente con el audio)
+const palettes = [
+  { agent1: [0, 255, 255], agent2: [0, 150, 255], cityTop: [0, 200, 255], cityLeft: [0, 100, 200], cityRight: [0, 50, 150] },
+  { agent1: [255, 0, 255], agent2: [200, 0, 150], cityTop: [255, 100, 255], cityLeft: [180, 0, 180], cityRight: [120, 0, 120] },
+  { agent1: [255, 255, 0], agent2: [255, 100, 0], cityTop: [255, 200, 0], cityLeft: [200, 100, 0], cityRight: [150, 50, 0] },
+  { agent1: [100, 255, 150], agent2: [50, 200, 100], cityTop: [100, 255, 150], cityLeft: [50, 180, 80], cityRight: [20, 100, 40] }
+];
+
+// Variables para efectos de audio
+let bassHue = 0;      // para cambio de color dinámico
+let trebleIntensity = 1;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  initCityBlocks();
+  flowField = new FlowField(30);
+  
+  // Crear agentes iniciales
+  for (let i = 0; i < agentCount; i++) {
+    agents.push(new HybridAgent(random(width), random(height)));
+  }
+  
+  // Inicializar FFT
+  fft = new p5.FFT();
+  
+  // Configurar audio (cambia el nombre si es necesario: 'Dystopia.mp3')
+  userStartAudio().then(() => {
+    audio = loadSound('Dystopia.mp3', 
+      () => {
+        audio.loop();
+        isPlaying = true;
+        fft.setInput(audio);
+      },
+      (err) => {
+        console.error("Error cargando audio, usando micrófono");
+        getAudioContext().resume();
+        let mic = new p5.AudioIn();
+        mic.start();
+        fft.setInput(mic);
+        isPlaying = true;
+      }
+    );
+  }).catch(() => console.log("Esperando clic"));
+}
+
+function draw() {
+  background(0, nightMode ? 30 : 20);
+  
+  // Actualizar audio y efectos
+  if (isPlaying && fft && typeof fft.getLevel === 'function') {
+    updateFromAudio();
+  }
+  
+  // Dibujar ciudad isométrica
+  drawCityIso();
+  
+  // Dibujar campo de flujo (sutil)
+  if (useFlowField && frameCount % 5 === 0) {
+    drawFlowFieldDebug();
+  }
+  
+  // Actualizar repeller temporal
+  if (repeller && millis() - repellerTimer > 1500) {
+    repeller = null;
+  }
+  
+  // Actualizar agentes y eliminar muertos
+  for (let i = agents.length - 1; i >= 0; i--) {
+    let agent = agents[i];
+    
+    if (useFlowField) agent.follow(flowField);
+    if (useFlocking) agent.flock(agents);
+    if (repeller) agent.applyForce(repeller.repel(agent));
+    
+    applyMouseForces(agent);
+    agent.update();
+    agent.show(trailsEnabled);
+    
+    if (agent.isDead()) {
+      agents.splice(i, 1);
+    }
+  }
+  
+  // Mantener densidad (crear nuevos agentes para reemplazar muertos)
+  let targetCount = agentCount;
+  while (agents.length < targetCount) {
+    for (let i = 0; i < spawnRate; i++) {
+      agents.push(new HybridAgent(random(width), random(height)));
+    }
+  }
+  if (agents.length > targetCount) {
+    agents = agents.slice(0, targetCount);
+  }
+}
+
+function updateFromAudio() {
+  let level = fft.getLevel();
+  let bassEnergy = fft.getEnergy(20, 100);
+  let trebleEnergy = fft.getEnergy(2000, 12000);
+  
+  // Efecto 1: cambio de paleta con los graves
+  // Mapeamos bassEnergy (0-255) a índice de paleta (0-3) con transición suave
+  let newColorMode = floor(map(bassEnergy, 0, 255, 0, palettes.length));
+  colorMode = constrain(newColorMode, 0, palettes.length - 1);
+  
+  // Efecto 2: intensidad de brillo con agudos
+  trebleIntensity = map(trebleEnergy, 0, 255, 0.8, 1.5);
+  
+  // Ajuste de flujo y velocidades
+  let bassNorm = map(bassEnergy, 0, 255, 0.7, 1.5);
+  flowField.setScale(bassNorm);
+  
+  let trebleNorm = map(trebleEnergy, 0, 255, 0.8, 1.8);
+  let dynamicSpeed = constrain(maxspeedBase * trebleNorm * mouseSpeedMult, 2, 12);
+  let dynamicForce = constrain(maxforceBase * trebleNorm * mouseForceMult, 0.1, 1.0);
+  
+  let targetCount = floor(map(level, 0, 0.3, 60, 280));
+  if (!isNaN(targetCount)) agentCount = constrain(targetCount, 50, 300);
+  
+  for (let agent of agents) {
+    agent.maxspeed = dynamicSpeed;
+    agent.maxforce = dynamicForce;
+  }
+  
+  // Pulso visual en edificios (se hace en drawCityIso)
+  pulseCityIso(bassNorm);
+}
+
+function applyMouseForces(agent) {
+  let mouse = createVector(mouseX, mouseY);
+  let distToMouse = p5.Vector.dist(agent.position, mouse);
+  
+  if (mouseIsPressed && mouseButton === LEFT && distToMouse < 100) {
+    let force = p5.Vector.sub(mouse, agent.position);
+    let strength = map(distToMouse, 0, 100, 0.8, 0);
+    force.setMag(strength);
+    agent.applyForce(force);
+  } else if (mouseIsPressed && mouseButton === RIGHT && distToMouse < 150) {
+    let force = p5.Vector.sub(agent.position, mouse);
+    let strength = map(distToMouse, 0, 150, 1.0, 0);
+    force.setMag(strength);
+    agent.applyForce(force);
+  }
+}
+
+// ---------- Ciudad isométrica cúbica ----------
+function initCityBlocks() {
+  cityBlocks = [];
+  let cols = floor(width / 70);
+  let rows = floor(height / 70);
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      if (random() > 0.65) { // densidad
+        let x = (i - cols/2) * 70 + random(-15, 15);
+        let y = (j - rows/2) * 70 + random(-15, 15);
+        let h = random(20, 100);
+        cityBlocks.push({ x, y, h, w: 35 });
+      }
+    }
+  }
+}
+
+function drawCityIso() {
+  let pal = palettes[colorMode];
+  let angle = radians(30);
+  let cosAngle = cos(angle);
+  let sinAngle = sin(angle);
+  
+  for (let block of cityBlocks) {
+    let x = block.x;
+    let y = block.y;
+    let h = block.h * (0.8 + trebleIntensity * 0.2); // altura modulada por agudos
+    let w = block.w;
+    
+    // Coordenadas isométricas del suelo
+    let x0 = width/2 + (x - y) * cosAngle;
+    let y0 = height/2 + (x + y) * sinAngle;
+    
+    // Vértices del cubo (suelo y techo)
+    let p1 = {x: x0, y: y0};                         // frente
+    let p2 = {x: x0 + w * cosAngle, y: y0 + w * sinAngle}; // derecha
+    let p3 = {x: x0, y: y0 + w * 2 * sinAngle};            // atrás
+    let p4 = {x: x0 - w * cosAngle, y: y0 + w * sinAngle}; // izquierda
+    
+    // Cara superior (techo)
+    fill(pal.cityTop[0], pal.cityTop[1], pal.cityTop[2], 180);
+    beginShape();
+    vertex(p1.x, p1.y - h);
+    vertex(p2.x, p2.y - h);
+    vertex(p3.x, p3.y - h);
+    vertex(p4.x, p4.y - h);
+    endShape(CLOSE);
+    
+    // Cara izquierda
+    fill(pal.cityLeft[0], pal.cityLeft[1], pal.cityLeft[2], 150);
+    beginShape();
+    vertex(p1.x, p1.y);
+    vertex(p4.x, p4.y);
+    vertex(p4.x, p4.y - h);
+    vertex(p1.x, p1.y - h);
+    endShape(CLOSE);
+    
+    // Cara derecha
+    fill(pal.cityRight[0], pal.cityRight[1], pal.cityRight[2], 150);
+    beginShape();
+    vertex(p1.x, p1.y);
+    vertex(p2.x, p2.y);
+    vertex(p2.x, p2.y - h);
+    vertex(p1.x, p1.y - h);
+    endShape(CLOSE);
+  }
+}
+
+function pulseCityIso(intensity) {
+  // Hacemos vibrar ligeramente los edificios (efecto de pulso)
+  for (let block of cityBlocks) {
+    // Esto modifica temporalmente la altura; se restablece en cada frame
+    // pero como pulseCityIso se llama desde updateFromAudio, la altura se modifica dinámicamente
+    block.h = constrain(block.h * (0.98 + intensity * 0.05), 20, 120);
+  }
+}
+
+// ---------- Flow field y agentes ----------
+
+function drawFlowFieldDebug() {
+  // Colorear según los graves (bassEnergy se actualiza en updateFromAudio)
+  let bass = fft ? fft.getEnergy(20, 100) : 128;
+  let r = map(bass, 0, 255, 0, 255);
+  let g = map(bass, 0, 255, 100, 255);
+  let b = map(bass, 0, 255, 200, 255);
+  
+  // Grosor y longitud según agudos
+  let treble = fft ? fft.getEnergy(2000, 12000) : 128;
+  let thickness = map(treble, 0, 255, 0.5, 2.5);
+  let lengthScale = map(treble, 0, 255, 4, 12);
+  
+  stroke(r, g, b, 180);
+  strokeWeight(thickness);
+  
+  for (let i = 0; i < flowField.cols; i++) {
+    for (let j = 0; j < flowField.rows; j++) {
+      let v = flowField.field[i][j];
+      let x = i * flowField.resolution;
+      let y = j * flowField.resolution;
+      let dx = v.x * lengthScale;
+      let dy = v.y * lengthScale;
+      line(x, y, x + dx, y + dy);
+      
+      // Pequeño destello en cada punto de la cuadrícula (opcional)
+      stroke(r, g, b, 100);
+      point(x, y);
+    }
+  }
+}
+
+function mousePressed() {
+  if (mouseButton === LEFT) {
+    // En lugar de crear nuevos agentes, redirige los cercanos al mouse
+    let mousePos = createVector(mouseX, mouseY);
+    let countRedirected = 0;
+    for (let agent of agents) {
+      let d = p5.Vector.dist(agent.position, mousePos);
+      if (d < 100) {
+        // Nueva dirección: aleatoria + un poco hacia el mouse (efecto "empuje")
+        let desiredDir = p5.Vector.sub(mousePos, agent.position);
+        desiredDir.setMag(agent.maxspeed);
+        // Mezcla: 70% dirección aleatoria, 30% hacia el mouse (para mantener la esencia)
+        let randomDir = p5.Vector.random2D();
+        randomDir.setMag(agent.maxspeed);
+        let newVel = p5.Vector.lerp(randomDir, desiredDir, 0.3);
+        agent.velocity = newVel;
+        // Reiniciar vida para que no muera pronto
+        agent.lifespan = agentLifespanMax;
+        countRedirected++;
+      }
+    }
+    console.log(`Redirigidos ${countRedirected} agentes`);
+  } else if (mouseButton === RIGHT) {
+    repeller = new TempRepeller(mouseX, mouseY);
+    repellerTimer = millis();
+  }
+}
+
+function keyPressed() {
+  switch(key) {
+    case 'f': case 'F': useFlowField = !useFlowField; break;
+    case 'g': case 'G': useFlocking = !useFlocking; break;
+    case 'c': case 'C': colorMode = (colorMode + 1) % palettes.length; break;
+    case 'n': case 'N': nightMode = !nightMode; break;
+    case '+': agentCount = constrain(agentCount + 20, 50, 300); break;
+    case '-': agentCount = constrain(agentCount - 20, 50, 300); break;
+  }
+}
+
+function mouseMoved() {
+  mouseForceMult = map(mouseX, 0, width, 0.5, 2.0);
+  mouseSpeedMult = map(mouseY, 0, height, 0.5, 2.0);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  initCityBlocks();
+  flowField = new FlowField(30);
+}
+
+// ---------------------- CLASES ----------------------
+class FlowField {
+  constructor(r) {
+    this.resolution = r;
+    this.cols = floor(width / this.resolution) + 1;
+    this.rows = floor(height / this.resolution) + 1;
+    this.field = new Array(this.cols);
+    for (let i = 0; i < this.cols; i++) this.field[i] = new Array(this.rows);
+    this.init();
+    this.scale = 1.0;
+  }
+  init() {
+    noiseSeed(random(10000));
+    let xoff = 0;
+    for (let i = 0; i < this.cols; i++) {
+      let yoff = 0;
+      for (let j = 0; j < this.rows; j++) {
+        let angle = map(noise(xoff, yoff), 0, 1, 0, TWO_PI);
+        this.field[i][j] = p5.Vector.fromAngle(angle);
+        yoff += 0.1;
+      }
+      xoff += 0.1;
+    }
+  }
+  setScale(s) { this.scale = s; }
+  lookup(position) {
+    let col = constrain(floor(position.x / this.resolution), 0, this.cols - 1);
+    let row = constrain(floor(position.y / this.resolution), 0, this.rows - 1);
+    let v = this.field[col][row].copy();
+    v.mult(this.scale);
+    return v;
+  }
+}
+
+class HybridAgent {
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.velocity = p5.Vector.random2D();
+    this.velocity.setMag(random(1, 3));
+    this.acceleration = createVector(0, 0);
+    this.r = 4;
+    this.maxspeed = 5;
+    this.maxforce = 0.3;
+    this.trail = [];
+    this.trailMax = 15;
+    this.lifespan = agentLifespanMax;   // <--- nuevo: vida
+  }
+  
+  applyForce(force) { this.acceleration.add(force); }
+  
+  follow(flow) {
+    let desired = flow.lookup(this.position);
+    desired.setMag(this.maxspeed);
+    let steer = p5.Vector.sub(desired, this.velocity);
+    steer.limit(this.maxforce);
+    this.applyForce(steer);
+  }
+  
+  flock(agents) {
+    let sep = this.separate(agents);
+    let ali = this.align(agents);
+    let coh = this.cohere(agents);
+    sep.mult(1.2);
+    ali.mult(1.0);
+    coh.mult(1.0);
+    this.applyForce(sep);
+    this.applyForce(ali);
+    this.applyForce(coh);
+  }
+  
+  separate(agents) {
+    let desiredSep = 25;
+    let steer = createVector(0, 0);
+    let count = 0;
+    for (let other of agents) {
+      if (other === this) continue;
+      let d = p5.Vector.dist(this.position, other.position);
+      if (d > 0 && d < desiredSep) {
+        let diff = p5.Vector.sub(this.position, other.position);
+        diff.normalize();
+        diff.div(d);
+        steer.add(diff);
+        count++;
+      }
+    }
+    if (count > 0) {
+      steer.div(count);
+      steer.setMag(this.maxspeed);
+      steer.sub(this.velocity);
+      steer.limit(this.maxforce);
+    }
+    return steer;
+  }
+  
+  align(agents) {
+    let neighborDist = 50;
+    let sum = createVector(0, 0);
+    let count = 0;
+    for (let other of agents) {
+      if (other === this) continue;
+      let d = p5.Vector.dist(this.position, other.position);
+      if (d > 0 && d < neighborDist) {
+        sum.add(other.velocity);
+        count++;
+      }
+    }
+    if (count > 0) {
+      sum.div(count);
+      sum.setMag(this.maxspeed);
+      let steer = p5.Vector.sub(sum, this.velocity);
+      steer.limit(this.maxforce);
+      return steer;
+    }
+    return createVector(0, 0);
+  }
+  
+  cohere(agents) {
+    let neighborDist = 50;
+    let sum = createVector(0, 0);
+    let count = 0;
+    for (let other of agents) {
+      if (other === this) continue;
+      let d = p5.Vector.dist(this.position, other.position);
+      if (d > 0 && d < neighborDist) {
+        sum.add(other.position);
+        count++;
+      }
+    }
+    if (count > 0) {
+      sum.div(count);
+      return this.seek(sum);
+    }
+    return createVector(0, 0);
+  }
+  
+  seek(target) {
+    let desired = p5.Vector.sub(target, this.position);
+    desired.setMag(this.maxspeed);
+    let steer = p5.Vector.sub(desired, this.velocity);
+    steer.limit(this.maxforce);
+    return steer;
+  }
+  
+  update() {
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.maxspeed);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+    
+    // Reducir vida
+    this.lifespan -= 1;
+    
+    // Guardar trail
+    this.trail.push(this.position.copy());
+    if (this.trail.length > this.trailMax) this.trail.shift();
+    
+    // Wraparound
+    if (this.position.x < 0) this.position.x = width;
+    if (this.position.x > width) this.position.x = 0;
+    if (this.position.y < 0) this.position.y = height;
+    if (this.position.y > height) this.position.y = 0;
+  }
+  
+  show(trailsOn) {
+    let pal = palettes[colorMode];
+    let angle = this.velocity.heading();
+    // La opacidad se reduce conforme la vida disminuye
+    let alpha = nightMode ? 150 : 220;
+    alpha *= map(this.lifespan, 0, agentLifespanMax, 0.3, 1.0);
+    
+    // Trail también se desvanece
+    if (trailsOn && this.trail.length > 1) {
+      for (let i = 0; i < this.trail.length - 1; i++) {
+        let t = map(i, 0, this.trail.length, 0.2, 1);
+        let alphaTrail = map(this.lifespan, 0, agentLifespanMax, 20, 120) * t;
+        stroke(pal.agent1[0], pal.agent1[1], pal.agent1[2], alphaTrail);
+        strokeWeight(2);
+        line(this.trail[i].x, this.trail[i].y, this.trail[i+1].x, this.trail[i+1].y);
+      }
+    }
+    
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(angle);
+    fill(pal.agent1[0], pal.agent1[1], pal.agent1[2], alpha);
+    stroke(pal.agent2[0], pal.agent2[1], pal.agent2[2], alpha);
+    strokeWeight(1);
+    beginShape();
+    vertex(this.r * 2, 0);
+    vertex(-this.r * 2, -this.r);
+    vertex(-this.r * 2, this.r);
+    endShape(CLOSE);
+    pop();
+  }
+  
+  isDead() {
+    return this.lifespan <= 0;
+  }
+}
+
+class TempRepeller {
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.power = 200;
+  }
+  repel(agent) {
+    let force = p5.Vector.sub(this.position, agent.position);
+    let distance = constrain(force.mag(), 10, 100);
+    let strength = this.power / (distance * distance);
+    force.setMag(strength);
+    return force;
+  }
+}
+````
+- **Enlace al sketch.**
+
+https://editor.p5js.org/JorgeLuisSuarique/sketches/wwIZjVNgi
+
+- **Capturas o registros de momentos importantes de la pieza.**
+
+<img width="856" height="818" alt="image" src="https://github.com/user-attachments/assets/08ce463b-8758-42df-881d-29de1fda89b2" />
 
 
 ## Bitácora de reflexión

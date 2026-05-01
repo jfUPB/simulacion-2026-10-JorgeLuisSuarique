@@ -21,14 +21,33 @@ Me gusta como el relog decora la palabra reljog en ingles para expresar mejor el
 ### Actividad 2.
 https://brm.io/matter-js/demo/#mixed
 
-- **Engine:** 
-- **World:**
-- **Bodies:**
-- **Constraint:**
-- **MouseConstraint:**
+- **Engine:** Es el motor que hace funcionar la física. Calcula la gravedad, las colisiones y el movimiento de todo. Sin él, los objetos se quedarían quietos para siempre.
+- **World:** Es el escenario donde ocurre todo. Aquí pones los objetos, el suelo, las paredes y las uniones. Si no añades algo al mundo, no aparecerá en la simulación.
+
+- **Bodies:** Son los objetos físicos (rectángulos, círculos o formas personalizadas). Cada cuerpo tiene peso, rebote y fricción. Para una palabra, cada letra sería un cuerpo diferente.
+
+- **Constraint:** Son las uniones que conectan cuerpos entre sí. Sirven para crear cadenas, resortes o articulaciones. Con esto puedes unir letras para formar una palabra flexible.
+
+- **MouseConstraint:** Permite agarrar y arrastrar objetos con el ratón. Al hacer clic y mover, aplicas fuerza al cuerpo. Así puedes interactuar con la palabra y mover sus letras.
 
 
 ### Actividad 3.
+
+#### Experimento 1_ 
+- **Explica qué dato estás leyendo del audio.**: El volumen (amplitud) captado por el micrófono, de 0 (silencio) a 1 (fuerte).
+
+- **Explica qué comportamiento visual o físico activa ese dato.**: Un círculo cambia de tamaño: silencio = pequeño, sonido fuerte = grande.
+
+- **Describe qué tipo de respuesta sonora te serviría más para tu palabra y por qué.**: Continua, porque sigue el flujo natural del sonido en tiempo real.
+
+#### Experimento 2_ 
+
+- **Explica qué dato estás leyendo del audio.**:
+
+- **Explica qué comportamiento visual o físico activa ese dato.**:
+
+- **Describe qué tipo de respuesta sonora te serviría más para tu palabra y por qué.**:
+
 ### Actividad 4.
 ## Bitácora de aplicación 
 

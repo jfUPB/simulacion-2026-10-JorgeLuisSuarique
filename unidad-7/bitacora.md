@@ -42,14 +42,31 @@ https://brm.io/matter-js/demo/#mixed
 
 #### Experimento 2_ 
 
-- **Explica qué dato estás leyendo del audio.**:
+- **Explica qué dato estás leyendo del audio.**: La energía del sonido, que es la amplitud acumulada o sostenida en el tiempo (no el volumen instantáneo, sino cuánta energía total ha habido).
 
-- **Explica qué comportamiento visual o físico activa ese dato.**:
+- **Explica qué comportamiento visual o físico activa ese dato.**: Un círculo que se llena como un termómetro: con cada sonido que entra, la energía se acumula y el círculo se va llenando de color. Si hay silencio por unos segundos, la energía se reinicia.
 
-- **Describe qué tipo de respuesta sonora te serviría más para tu palabra y por qué.**:
+- **Describe qué tipo de respuesta sonora te serviría más para tu palabra y por qué.**: Puntual con memoria (acumulativa), porque representa la "cantidad total de sonido" que ha entrado, no solo el volumen del momento.
 
 ### Actividad 4.
+- Muestra una prueba inicial.
+  <img width="602" height="291" alt="image" src="https://github.com/user-attachments/assets/bbcbeec2-f704-4d54-bfeb-6b4dbb0ffc89" />
+  
+- Explica qué parte de la palabra construiste.
+  Construí la palabra completa "acordeón" como texto dentro de un canvas.
+  
+- Explica qué propiedad física manipulaste.
+  Manipulé la escala horizontal (estiramiento) de la palabra. Cuando el audio suena, la palabra se hace más ancha; cuando el audio termina, vuelve a su tamaño normal.
+  
+- Explica qué aspecto del audio afecta qué comportamiento.
+  El volumen (amplitud) del audio de acordeón afecta el ancho de la palabra. A mayor volumen, más se estira la palabra, simulando la apertura del fuelle de un acordeón real.
+  
+- Evalúa qué funcionó y qué no para el significado que quieres construir.
+  La relación entre el volumen del audio y el estiramiento de la palabra funciona bien como metáfora del fuelle del acordeón: más sonido = más abierto. Sin embargo, el estiramiento es uniforme y no tiene pliegues ni separación entre letras, lo que pierde la textura visual de un acordeón real. Para la pieza final, debo dividir la palabra en segmentos que se separen entre sí.
+
 ## Bitácora de aplicación 
 
+### Actividad 5
+Aun falta, para el Viernes profe
 
 ## Bitácora de reflexión

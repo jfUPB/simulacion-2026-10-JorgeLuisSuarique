@@ -67,6 +67,185 @@ https://brm.io/matter-js/demo/#mixed
 ## Bitácora de aplicación 
 
 ### Actividad 5
-Aun falta, para el Viernes profe
+#### Palabra elegida.
+**Precionar** 
+#### Justificación conceptual.
+Un mazo que preiona sobre las demas letras.
+#### Análisis de su significado visual y comportamental.
+Precionar sobre las demas letras como si aplastara objetos de goma.
+#### Moodboard o referencias.
+<img width="478" height="483" alt="image" src="https://github.com/user-attachments/assets/412df177-242d-4347-a8a4-99e33dcdffa4" />
+<img width="690" height="460" alt="image" src="https://github.com/user-attachments/assets/b5d65945-1150-4d0d-b4b1-fb5af79acc50" />
+#### Bocetos.
+
+#### Mapa de decisiones.
+#### Mapa de interpretación.
+#### Explicación de la relación entre audio y comportamiento.
+El audio es un sonido de precionar algo de goma pero siendo un sonido sueva, no el chillido que conocemos.
+#### Evidencia del uso de IA.
+La IA ayudó en la implementación técnica: física del mazo, estiramiento del mango, control del sonido con duración de 1 segundo, detección de clic y animación completa. La idea narrativa, la elección de la palabra "presionar", la mecánica de aplastamiento y la decisión de usar un chirrido de goma son de mi autoría.
+#### Código fuente.
+````js
+let animacionActiva = false;
+let aplastamiento = 0;
+let sonidoIniciado = false;
+
+let letras = ["r", "e", "s", "i", "o", "n", "a", "r"];
+let posicionesOriginales = [];
+
+let mangoX = 120;
+let cabezaX = 160;
+let cabezaY;
+
+let chirrido;
+let audioActivado = false;
+
+function preload() {
+  soundFormats('mp3', 'wav', 'ogg');
+  chirrido = loadSound('presionar.mp3');
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  cabezaY = height / 2;
+  
+  let inicioX = cabezaX + 40;
+  for (let i = 0; i < letras.length; i++) {
+    posicionesOriginales.push(inicioX + i * 50);
+  }
+  
+  textAlign(CENTER, CENTER);
+  textSize(20);
+  fill(0);
+  text("🖱️ Haz CLIC en la cabeza de la P (mazo) para aplastar", width/2, 70);
+}
+
+function draw() {
+  background(240);
+  
+  // Dibujar letras "resionar"
+  for (let i = 0; i < letras.length; i++) {
+    push();
+    translate(posicionesOriginales[i], height/2);
+    let escalaX = 1 + aplastamiento * 1.4;
+    let escalaY = map(aplastamiento, 0, 1, 1, 0.25);
+    scale(escalaX, escalaY);
+    let gris = map(aplastamiento, 0, 1, 80, 180);
+    fill(gris, 100, 150);
+    textSize(42);
+    text(letras[i], 0, 0);
+    pop();
+  }
+  
+  // Dibujar mazo (P)
+  push();
+  let estiramientoMango = map(aplastamiento, 0, 1, 1, 2.8);
+  let desplazamientoCabeza = map(aplastamiento, 0, 1, 0, 180);
+  let tamanoCabeza = map(aplastamiento, 0, 1, 50, 110);
+  
+  fill(160, 80, 40);
+  noStroke();
+  rect(mangoX, cabezaY - 15, 25 * estiramientoMango, 30);
+  
+  fill(200, 60, 60);
+  ellipse(cabezaX + desplazamientoCabeza, cabezaY, tamanoCabeza, tamanoCabeza);
+  
+  fill(255);
+  textSize(tamanoCabeza * 0.6);
+  textAlign(CENTER, CENTER);
+  text("P", cabezaX + desplazamientoCabeza, cabezaY);
+  pop();
+  
+  // === SONIDO (1 segundo, se activa en impacto) ===
+  if (animacionActiva && audioActivado && chirrido) {
+    if (aplastamiento >= 0.55 && !sonidoIniciado) {
+      chirrido.play();                // solo una vez
+      chirrido.setVolume(0.8);
+      sonidoIniciado = true;
+      
+      setTimeout(() => {
+        if (chirrido.isPlaying()) {
+          chirrido.stop();
+        }
+      }, 1000);                      // 1 segundo de duración
+    }
+  }
+  
+  if (!animacionActiva && sonidoIniciado && chirrido && chirrido.isPlaying()) {
+    chirrido.stop();
+    sonidoIniciado = false;
+  }
+  
+  // Barra de aplastamiento
+  fill(150);
+  rect(width/2 - 100, height - 80, 200, 12);
+  fill(200, 50, 50);
+  rect(width/2 - 100, height - 80, 200 * aplastamiento, 12);
+  
+  fill(100);
+  textSize(14);
+  if (audioActivado) {
+    fill(0, 150, 0);
+    text("🔊 Sonido listo", width/2, height - 40);
+  } else {
+    fill(150);
+    text("🔇 Haz clic en la cabeza de la P", width/2, height - 40);
+  }
+  
+  stroke(200, 0, 0, 80);
+  noFill();
+  ellipse(cabezaX + map(aplastamiento, 0, 1, 0, 180), cabezaY, 80, 80);
+  noStroke();
+}
+
+function mousePressed() {
+  let cabezaActualX = cabezaX + map(aplastamiento, 0, 1, 0, 180);
+  let distancia = dist(mouseX, mouseY, cabezaActualX, cabezaY);
+  
+  if (distancia < 70 && !animacionActiva) {
+    animacionActiva = true;
+    sonidoIniciado = false;
+    
+    if (!audioActivado && chirrido) {
+      userStartAudio();
+      audioActivado = true;
+    }
+    
+    aplastamiento = 0;
+    
+    let subir = setInterval(() => {
+      if (aplastamiento < 1) {
+        aplastamiento += 0.08;
+      } else {
+        clearInterval(subir);
+        setTimeout(() => {
+          let bajar = setInterval(() => {
+            if (aplastamiento > 0) {
+              aplastamiento -= 0.06;
+            } else {
+              clearInterval(bajar);
+              animacionActiva = false;
+            }
+          }, 25);
+        }, 350);
+      }
+    }, 25);
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  cabezaY = height / 2;
+  let inicioX = cabezaX + 40;
+  for (let i = 0; i < letras.length; i++) {
+    posicionesOriginales[i] = inicioX + i * 50;
+  }
+}
+````
+#### Enlace al sketch.
+https://editor.p5js.org/JorgeLuisSuarique/sketches/SUojdNuNf
+#### Capturas o registros de la pieza.
+<img width="848" height="705" alt="image" src="https://github.com/user-attachments/assets/80adabcf-9d96-46cb-ac2a-7006821fcfd3" />
+
 
 ## Bitácora de reflexión

@@ -33,6 +33,8 @@ No hay mucho ejemplos en los que pueda basarme y ese tipo de tutoriales escasean
 ### Actividad 3.
 
 #### Describe qué componentes o módulos necesitas aprender en tu herramienta.
+- **Niagara systema:** es una herramienta que ofrece Unreal engine para el control de particulas y el uso de ellas para volverlo inmersivas.
+- **Lignight**: En unreal nesesito mantener esta funcion lo mas optimisado para que la inmercion funcione bien.
 #### Realiza al menos dos pruebas técnicas.
 #### Explica qué resuelve cada prueba.
 #### Indica qué parte del sistema ya lograste reconstruir.

@@ -44,8 +44,11 @@ No hay mucho ejemplos en los que pueda basarme y ese tipo de tutoriales escasean
 
 Construye una tabla, esquema o mapa comparando:
 
-cómo funcionaba el sistema en p5.js,
-cómo se implementa en la nueva herramienta,
+**Cómo funcionaba el sistema en p5.js.**
+Tanto el sistema de Flow Fields como el Flocking son dos técnicas fundamentales en p5.js para crear movimiento emergente y orgánico. Aunque ambos simulan comportamientos colectivos, lo hacen de maneras muy diferentes.
+En esencia, el Flow Field es como una corriente invisible que guía a las partículas , mientras que el Flocking es un conjunto de reglas internas que los propios agentes (llamados "boids") siguen para moverse en grupo, como una bandada de pájaros.
+**cómo se implementa en la nueva herramienta,**
+En Unreal Engine no hay un botón de "flocking", pero puedes construirlo. Para bandadas (flocking) lo más fácil es usar el plugin gratuito "FlockSteeringBehavior" en la tienda de Unreal, que ya viene con las reglas de pájaros o peces listas para usar. Para campos de flujo (flow fields) —donde muchas cosas siguen una corriente invisible— la mejor solución simple es el proyecto de código abierto "FlowField-RVO2", que además hace que los personajes se esquiven entre ellos mientras siguen la corriente. Si tu idea es algo más artístico (como viento o humo), puedes lograr un efecto parecido usando el sistema visual Niagara que viene incluido en Unreal 5.
 qué se mantiene,
 qué cambia,
 qué ventajas aparecen,

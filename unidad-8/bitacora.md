@@ -33,15 +33,21 @@ No hay mucho ejemplos en los que pueda basarme y ese tipo de tutoriales escasean
 ### Actividad 3.
 
 #### Describe qué componentes o módulos necesitas aprender en tu herramienta.
+
 - **Niagara systema:** es una herramienta que ofrece Unreal engine para el control de particulas y el uso de ellas para volverlo inmersivas.
 - **Lignight**: En unreal nesesito mantener esta funcion lo mas optimisado para que la inmercion funcione bien.
+  
 #### Realiza al menos dos pruebas técnicas.
+
 <img width="1153" height="661" alt="image" src="https://github.com/user-attachments/assets/28218b10-956c-4ca9-b875-72020d79738a" />
-aunque esta en el mismo proyecto, logre usar Flow fields y flocking usando blueprints, asi que ambas pruebas se hicieron en simultaneo
+aunque esta en el mismo proyecto, logre usar Flow fields y flocking usando blueprints, asi que ambas pruebas se hicieron en simultaneo.
+
 #### Explica qué resuelve cada prueba.
 Ambas como se hicieron en simlutaneo se demosntro que se puede emular los compotamiento del Flow fields y flocking unsando los blueprints pero si advieto, es mas dificil de lo que se cree.
+
 #### Indica qué parte del sistema ya lograste reconstruir.
-El Flow fields es le sistema que ya esta bien establecido, poruqe permite dare una guia en todas partes
+El Flow fields es le sistema que ya esta bien establecido, poruqe permite dare una guia en todas partes.
+
 #### Explica qué parte sigue sin resolverse.
 El flocking aun no se aplica del todo sus 3 reglas pero esta muy cerca de terminar.
 

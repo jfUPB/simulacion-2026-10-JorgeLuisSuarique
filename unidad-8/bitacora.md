@@ -77,17 +77,54 @@ Usar ele ejemlo de la actividad de la muscia, ya que este proyecto esta basado e
 
 ## Bitácora de aplicación 
 ### Actividad 5.
-- Herramienta elegida.
-- Sistema transferido.
-- Contexto profesional concreto.
-- Concepto visual.
-- Referencias.
-- Bocetos.
-- Explicación de la transferencia.
-- Mapa de decisiones.
-- Mapa de presentación.
-- Evidencia del uso de IA.
-- Código, archivo, proyecto o documentación técnica según la herramienta. 
-- Registro visual de la pieza.
+**- Herramienta elegida.**
+  Unreal Eninge 5.7.4.
+  
+**- Sistema transferido.**
+Flow field y Flocking
+
+**- Contexto profesional concreto.**
+  esta piesa es pensado para una expericiea interactiva en donde pulsando ya sea un click o algun puslte puedas ver como las esferas de metal estan haciendo recorridos en circulos desde difereten direciones.
+  
+**- Concepto visual.**
+  <img width="736" height="736" alt="image" src="https://github.com/user-attachments/assets/a197b693-1a67-4180-b46c-655bb0ce209c" />
+  
+**- Referencias.**
+<img width="736" height="1075" alt="image" src="https://github.com/user-attachments/assets/6eb63703-2ed0-492e-91c5-390d986774a9" />
+<img width="450" height="450" alt="image" src="https://github.com/user-attachments/assets/c233d8b1-95c2-4a82-9b08-23c18b350d0c" />
+
+  
+**- Bocetos.**
+  <img width="1920" height="1080" alt="Boseto_1" src="https://github.com/user-attachments/assets/79d8daa0-1bb6-49fa-abe9-2c90e212290f" />
+
+**- Explicación de la transferencia.**
+Es como pienso mejorar el sistema con el tiempo y hacer algo mucho mas pulido y mejor visualmente, pero hasta ahora funciona bastante bien.
+  
+**- Mapa de decisiones.**
+  <img width="589" height="458" alt="MapaPresentacion" src="https://github.com/user-attachments/assets/aa97b66c-37ad-4c01-aecb-540bc6aca9e5" />
+
+**- Mapa de presentación.**
+<img width="589" height="426" alt="mapaDesiciones" src="https://github.com/user-attachments/assets/e223f9d8-c1ea-40b7-8400-41a8720d9fa4" />
+
+**- Evidencia del uso de IA.**
+La autoría conceptual del proyecto es mia. La IA materializó en código Blueprint las ideas que vos traías: el círculo, el jardín, la arena de partículas, la estela de luz. Sin esas decisiones mias, el proyecto hubiera sido una prueba técnica genérica de flocking. Con ellas, es una experiencia artística con identidad propia.
+
+**- Código, archivo, proyecto o documentación técnica según la herramienta.**
+#### Documentación técnica.
+
+El proyecto fue desarrollado en Unreal Engine 5.7.4 usando exclusivamente Blueprints (sin código escrito). Por el peso del proyecto, no se sube el archivo completo al repositorio — la documentación técnica se presenta en forma de registros, capturas y esquemas.
+Blueprints desarrollados:
+
+BP_FlowFieldManager — genera y almacena la grilla de vectores circulares. Contiene la función SampleField que retorna el vector de dirección según posición en el mundo.
+BP_BoidAgent — cada agente individual. Implementa Separation y Alignment como funciones separadas (CalculateSeparation, CalculateAlignment) y consulta el FlowField en cada tick para calcular su movimiento.
+NS_ArenaZen — sistema Niagara con emitter Fountain y Ribbon Renderer que genera las partículas doradas y las estelas de luz.
+Registros adjuntos:
+Registro de proceso técnico completo sesión a sesión
+Documento de uso de IA como materializador (qué resolvió la IA vs qué decisiones fueron propias)
+Mapa de decisiones de diseño
+Mapa de presentación para muestra pública
+
+**- Registro visual de la pieza.**
+<img width="1259" height="706" alt="image" src="https://github.com/user-attachments/assets/0f260a16-6bc8-459f-94b9-fda60fa3dd40" />
 
 ## Bitácora de reflexión

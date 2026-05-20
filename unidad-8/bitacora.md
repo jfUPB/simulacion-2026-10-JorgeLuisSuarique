@@ -2,8 +2,129 @@
 
 ## Bitácora de proceso de aprendizaje
 
+### Actividad 1.
+
+#### Indica qué herramienta te interesa explorar y por qué.
+Usare la herramienta de Unreal Enige 5 ya que tengo experiencia en su uso y ma gustaria enfocarme bastante en los efectos visuales de esta herramienta.
+#### Explica qué relación tiene esa herramienta con tu línea de énfasis o interés profesional.
+Esta herramienta junata mis gustos y habilidades en lo que son los efectos visuales y la composicion en el mundo audio visual de una manera mas tecnica y profecional sin avandonar el arte.
+#### Busca 2 o 3 referentes realizados con esa herramienta o cercanos a su ecosistema.
+https://www.youtube.com/shorts/MHcydxswpHM
+https://www.youtube.com/shorts/RP0IKOJiclM
+https://roberthodgin.com/project/taxi-taxi
+#### Explica qué te interesa de esos referentes.
+me gusta mucho como se ve el sistema de particulas siguiendo varias rutas aleatoriamente pero sin chocar unos con otras.
+#### Propón uno o dos posibles contextos profesionales para tu pieza final.
+Para mi flujo de trabajo el uso de flow fields y flocking puede ayudar bastante en la produccion virtual en un diferentes contexto que se nesesita para efectos visuales que se sientan inmersivos.
+
+### Actividad 2.
+
+#### Indica qué sistema del curso vas a transferir.
+usare el sistema de flow fields y flocking para este trabajo.
+#### Explica brevemente cómo funcionaba ese sistema en p5.js.
+
+#### Justifica por qué quieres transferirlo a la herramienta elegida.
+Aunque con Unreal es dificil encontrar ejemplos para ilustrar (solo con fliking, flow fiedels se usa mucho en la industria de videojuegos), ls herramientas que puedes programar con Blueprints, teine funciones que permite desarrollar y calucular ese tipo de cormpontamiento creando una muy buena interaccion.
+#### Explica qué tipo de pieza visual te imaginas construir con esa combinación.
+El tipo de piesa que quiero hacer es un flujo de particulas como un flijo de naves en una ciudad cyberpunck en con una vista isometrica, que de una nerrativa inmersiva como si siguieramos el viento lleando de un lugar a otro.
+#### Señala qué dificultades técnicas anticipas.
+No hay mucho ejemplos en los que pueda basarme y ese tipo de tutoriales escasean, al usar Blueprints, es dificil generar el codigo y es mas buscar referencias y guias para hacer este tranbajo.
+
+### Actividad 3.
+
+#### Describe qué componentes o módulos necesitas aprender en tu herramienta.
+
+- **Niagara systema:** es una herramienta que ofrece Unreal engine para el control de particulas y el uso de ellas para volverlo inmersivas.
+- **Lignight**: En unreal nesesito mantener esta funcion lo mas optimisado para que la inmercion funcione bien.
+  
+#### Realiza al menos dos pruebas técnicas.
+
+<img width="1153" height="661" alt="image" src="https://github.com/user-attachments/assets/28218b10-956c-4ca9-b875-72020d79738a" />
+aunque esta en el mismo proyecto, logre usar Flow fields y flocking usando blueprints, asi que ambas pruebas se hicieron en simultaneo.
+
+#### Explica qué resuelve cada prueba.
+Ambas como se hicieron en simlutaneo se demosntro que se puede emular los compotamiento del Flow fields y flocking unsando los blueprints pero si advieto, es mas dificil de lo que se cree.
+
+#### Indica qué parte del sistema ya lograste reconstruir.
+El Flow fields es le sistema que ya esta bien establecido, poruqe permite dare una guia en todas partes.
+
+#### Explica qué parte sigue sin resolverse.
+El flocking aun no se aplica del todo sus 3 reglas pero esta muy cerca de terminar.
+
+### Actividad 4.
+
+Construye una tabla, esquema o mapa comparando:
+
+#### Cómo funcionaba el sistema en p5.js.
+Tanto el sistema de Flow Fields como el Flocking son dos técnicas fundamentales en p5.js para crear movimiento emergente y orgánico. Aunque ambos simulan comportamientos colectivos, lo hacen de maneras muy diferentes.
+En esencia, el Flow Field es como una corriente invisible que guía a las partículas , mientras que el Flocking es un conjunto de reglas internas que los propios agentes (llamados "boids") siguen para moverse en grupo, como una bandada de pájaros.
+#### cómo se implementa en la nueva herramienta.
+En Unreal Engine no hay un botón de "flocking", pero puedes construirlo. Para bandadas (flocking) lo más fácil es usar el plugin gratuito "FlockSteeringBehavior" en la tienda de Unreal, que ya viene con las reglas de pájaros o peces listas para usar. Para campos de flujo (flow fields) —donde muchas cosas siguen una corriente invisible— la mejor solución simple es el proyecto de código abierto "FlowField-RVO2", que además hace que los personajes se esquiven entre ellos mientras siguen la corriente. Si tu idea es algo más artístico (como viento o humo), puedes lograr un efecto parecido usando el sistema visual Niagara que viene incluido en Unreal 5.
+#### Qué se mantiene.
+Aunque Unreal Engine y p5.js son mundos muy diferentes (uno es un motor profesional para juegos 3D y el otro es una librería creativa para canvas 2D), la lógica central de estos algoritmos se mantiene prácticamente idéntica. Lo que cambia es el "idioma" en el que la escribes (C++/Blueprints vs JavaScript) y la escala (3D vs 2D).
+#### Qué cambia.
+En p5.js todo es código simple y 2D; en Unreal es código más robusto y 3D, con más herramientas visuales, pero también más pasos para hacer lo mismo. La lógica no cambia, pero la exigencia de rendimiento y la complejidad de implementación sí aumentan significativamente.
+#### Qué ventajas aparecen.
+p5.js es para arte generativo que se mira en una pantalla. Unreal es para arte generativo que se habita. La ventaja de Unreal no es solo el 3D bonito, sino que el espectador puede caminar dentro de la bandada, tocarla con sus manos (en VR), escucharla en 3D, y sentir que las partículas reaccionan a su presencia física. Pasás de ser un observador externo a vivir dentro del algoritmo.
+#### Qué limitaciones nuevas surgen.
+Si usás p5.js, en esta obra se ve en una pantalla plana y el espectador la mira desde afuera. Si usás Unreal, el espectador camina adentro de la bandada y siente el flow field rodeándolo. La diferencia no es técnica, es experiencial: uno se observa, el otro se habita. Empezá en p5.js para entender el algoritmo y después pasá a Unreal si necesitás que la gente esté adentro.
+
+### Cierra respondiendo:
+#### ¿Qué aprendiste sobre el sistema al tener que reconstruirlo fuera de p5.js?
+Reconstruirlo fuera de p5.js te enseña que p5.js es un paraíso artificial. Te protege de la complejidad real: manejo del tiempo, optimización de vecinos, grillas 3D, visualización costosa, y espacios infinitos. Aprendés que el algoritmo es solo el 20% del problema. El otro 80% es hacer que corra rápido en un mundo real con límites, luces, y un espectador que se mueve dentro. p5.js te dejaba pensar solo en la poesía del movimiento; fuera de él, también tenés que pensar en la ingeniería.
+
+Usar ele ejemlo de la actividad de la muscia, ya que este proyecto esta basado en esto.
 
 ## Bitácora de aplicación 
+### Actividad 5.
+**- Herramienta elegida.**
+  Unreal Eninge 5.7.4.
+  
+**- Sistema transferido.**
+Flow field y Flocking
 
+**- Contexto profesional concreto.**
+  esta piesa es pensado para una expericiea interactiva en donde pulsando ya sea un click o algun puslte puedas ver como las esferas de metal estan haciendo recorridos en circulos desde difereten direciones.
+  
+**- Concepto visual.**
+  <img width="736" height="736" alt="image" src="https://github.com/user-attachments/assets/a197b693-1a67-4180-b46c-655bb0ce209c" />
+  
+**- Referencias.**
+<img width="736" height="1075" alt="image" src="https://github.com/user-attachments/assets/6eb63703-2ed0-492e-91c5-390d986774a9" />
+<img width="450" height="450" alt="image" src="https://github.com/user-attachments/assets/c233d8b1-95c2-4a82-9b08-23c18b350d0c" />
+
+  
+**- Bocetos.**
+  <img width="1920" height="1080" alt="Boseto_1" src="https://github.com/user-attachments/assets/79d8daa0-1bb6-49fa-abe9-2c90e212290f" />
+
+**- Explicación de la transferencia.**
+Es como pienso mejorar el sistema con el tiempo y hacer algo mucho mas pulido y mejor visualmente, pero hasta ahora funciona bastante bien.
+  
+**- Mapa de decisiones.**
+  <img width="589" height="458" alt="MapaPresentacion" src="https://github.com/user-attachments/assets/aa97b66c-37ad-4c01-aecb-540bc6aca9e5" />
+
+**- Mapa de presentación.**
+<img width="589" height="426" alt="mapaDesiciones" src="https://github.com/user-attachments/assets/e223f9d8-c1ea-40b7-8400-41a8720d9fa4" />
+
+**- Evidencia del uso de IA.**
+La autoría conceptual del proyecto es mia. La IA materializó en código Blueprint las ideas que vos traías: el círculo, el jardín, la arena de partículas, la estela de luz. Sin esas decisiones mias, el proyecto hubiera sido una prueba técnica genérica de flocking. Con ellas, es una experiencia artística con identidad propia.
+
+**- Código, archivo, proyecto o documentación técnica según la herramienta.**
+#### Documentación técnica.
+
+El proyecto fue desarrollado en Unreal Engine 5.7.4 usando exclusivamente Blueprints (sin código escrito). Por el peso del proyecto, no se sube el archivo completo al repositorio — la documentación técnica se presenta en forma de registros, capturas y esquemas.
+Blueprints desarrollados:
+
+BP_FlowFieldManager — genera y almacena la grilla de vectores circulares. Contiene la función SampleField que retorna el vector de dirección según posición en el mundo.
+BP_BoidAgent — cada agente individual. Implementa Separation y Alignment como funciones separadas (CalculateSeparation, CalculateAlignment) y consulta el FlowField en cada tick para calcular su movimiento.
+NS_ArenaZen — sistema Niagara con emitter Fountain y Ribbon Renderer que genera las partículas doradas y las estelas de luz.
+Registros adjuntos:
+Registro de proceso técnico completo sesión a sesión
+Documento de uso de IA como materializador (qué resolvió la IA vs qué decisiones fueron propias)
+Mapa de decisiones de diseño
+Mapa de presentación para muestra pública
+
+**- Registro visual de la pieza.**
+<img width="1259" height="706" alt="image" src="https://github.com/user-attachments/assets/0f260a16-6bc8-459f-94b9-fda60fa3dd40" />
 
 ## Bitácora de reflexión
